@@ -205,21 +205,21 @@
 	
 	\subsection{Posterior distribution}
 	
-	In precision agriculture, the focus is on applying the optimal treatment, such as nitrogen rate, to a particular plot or area that will lead to the highest yield. In that context, we present the target distribution
+	In precision agriculture, the focus is on, firstly, determining the optimal treatment, such as the most productive nitrogen rate, for every part of the field, and then applying the spatially-varying optimal treatments to the entire field as part of a site-specific management strategy. To this end, an important quantity is 
 	\begin{equation}
 		p(\bm{X}\mid \bm{Y}) = \int p(\bm{X}\mid \bm{Y},\theta)p(\bm{Y},\theta)d\theta,
 	\end{equation}
-	as the marginal distribution of \textcolor{red}{$p(\bm{X}\mid \bm{Y})$ by integrating out} a set of unknown parameters $\theta$. 
+	the conditional probability of $\bm{X}$ given the response, computed by integrating out the set of unknown parameters $\theta$. 
 	
-	In order to estimate $\theta$ using $\bm{Y}$, we assuming probability density $p(\bm{Y}\mid\theta)$ and based on the Bayes theorem, we obtain the joint posterior density of the parameters
-	\begin{equation}
+	In order to estimate $\theta$ conditional on $\bm{Y}$, we use the Bayes theorem to obtain the joint posterior density of the parameters in terms of the likelihood $p(\bm{Y}\mid\theta)$ and the prior $\pi(\theta)$ as follows:
+	\begin{equation}\label{eq:Bayes}
 		p(\theta\mid \bm{Y}) = \frac{p(\bm{Y}\mid\theta)\pi(\theta)}{p(\bm{Y})},
 	\end{equation}
-	where $\pi(\theta)$ is known as the prior distribution that represents our previous knowledge or ``best guess'' and $p(\bm{Y}) = \int p(\bm{Y}\mid\theta)\pi(\theta) d\theta$ is the normalising constant which does not affect the inference. Quite often the equation is presented as 
+	where $p(\bm{Y}) = \int p(\bm{Y}\mid\theta)\pi(\theta) d\theta$ is the normalising constant, which is often difficult to compute. Because this constant does not affect the inference, we can ignore it while computing the posterior distribution. Consequently, the equation \eqref{eq:Bayes} is often written as 
 	\begin{equation}\label{eq:posterior}
-		p(\theta\mid \bm{Y}) \propto p(\bm{Y}\mid\theta)\pi(\theta),
+		p(\theta\mid \bm{Y}) \propto p(\bm{Y}\mid\theta)\pi(\theta).
 	\end{equation}
-	which is also called the marginal posterior distribution. The distribution of $p(\theta\mid \bm{Y})$ is the ``Bayesian inference'' of the parameter $\theta$ due to the fact that all information about $\theta$ is contained in the distribution \textcolor{red}{conditional on the observed data} \parencite{Che2010Bayesian}. We use \textcolor{red}{$L(\theta)=\ln p(\theta\mid\bm{Y})$,} the natural logarithm of the posterior in \eqref{eq:posterior}, and obtain for multivariate Gaussian distribution 
+The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inference'' of the parameter $\theta$. The posterior distribution $p(\theta\mid \bm{Y})$ provides all information about $\theta$ \textcolor{red}{conditional on the observed data} \parencite{Che2010Bayesian}. We denote \textcolor{red}{$L(\theta)=\ln p(\theta\mid\bm{Y})$,} the natural logarithm of the posterior in \eqref{eq:posterior}, and obtain for multivariate Gaussian distribution 
 	\begin{equation}\label{eq:logGpost}
 		L(\theta) \propto -\frac{1}{2} (\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u})^\top \Sigma_e^{-1}(\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u}) -\frac{1}{2}\ln\det\Sigma_e + \ln \pi(\theta),
 	\end{equation}
@@ -236,14 +236,14 @@
 	\begin{equation}\label{eq:sigmau}
 		\Sigma_u = \Sigma_c\otimes \Sigma_r\otimes V_u = (L_c L_c^\top)\otimes  (L_r L_r^\top)\otimes (L_u L_u^\top) = (L_c\otimes L_r\otimes L_u) (L_c\otimes L_r\otimes L_u)^\top, 
 	\end{equation}
-	\textcolor{red}{where $\Sigma_c=L_cL_c^\top$ is the correlation matrix in column with parameter $\rho_c$ and lower triangular factor of the Cholesky decomposition $L_c$, $\Sigma_r=L_rL_r^\top$ is the correlation matrix in row with parameter $\rho_r$ and lower triangular factor of the Cholesky decomposition $L_r$ and $V_u=L_uL_u^\top$ is the covariance matrix of $\bm{u}$ in a single grid and lower triangular factor of the Cholesky decomposition $L_u$}. 
+	\textcolor{red}{where $L_c$, $L_r$, and $L_u$ are the lower triangular Cholesky decomposition factors of the matrices $\Sigma_c$, $\Sigma_r$, and $V_u$, respectively}. 
 	Moreover, to improve the efficiency of sampling, we also impose the following formula based on the Kronecker product property, shown in Appendix \ref{sec:kronec}, that 
 	\begin{equation}
 		\tilde{\bm{u}} = (L_r\otimes L_c\otimes L_u)z_u = (L_c\otimes L_u)\tilde{z}_u L_r^\top,
 	\end{equation}
-	where $z_u$ is the length $r\times c\times k$ vector of \iid samples from $\N(0,1)$ and  $\tilde{z}_u$ is the transformation of $z_u$ with size $(k\times c)\times r$. The order the matrices $L_c$ and $L_r$ was swapped as ranges nested with rows. It is because $c\ll r$ and the Kronecker product on small size matrices runs faster than on large size matrices. 
+	where $z_u$ is the length $r\times c\times k$ vector of \iid samples from $\N(0,1)$ and  $\tilde{z}_u$ is the transformation of $z_u$ with size $(k\times c)\times r$. The order the matrices $L_c$ and $L_r$ has been swapped as columns are nested within rows. It is because $c\ll r$, and the Kronecker product of small matrices is faster to compute than that of large matrices. 
 	
-	The predictive distribution for a new query location $s^*$, assuming the above posterior distribution, is obtained by \textcolor{red}{marginalizing} over $\theta$ and is written as 
+	The predictive distribution for a new query location $s^*$, based on the aforementioned posterior distribution, is obtained by \textcolor{red}{marginalizing} over $\theta$ and is written as 
 	\begin{equation}\label{eq:prediction}
 		p(y(s^*) \mid x(s^*), z(s^*), \bm{Y},\bm{X},\bm{Z}) = \int p(y(s^*) \mid x(s^*), z(s^*), \theta)) p(\theta\mid \bm{Y},\bm{X},\bm{Z}) d\theta. 
 	\end{equation}
@@ -251,31 +251,31 @@
 	
 	\subsection{No U-turn sampler}
 	
-	In Hamiltonian Monte Carlo \textcolor{red}{(HMC)}, a set of auxiliary momentum variables \textcolor{red}{$r=\lbrace r_1,\ldots,r_d\rbrace$}, drawn independently from the standard normal distribution for each \textcolor{red}{parameter} \textcolor{red}{$\theta=\lbrace\theta_1,\ldots,\theta_d\rbrace$}, is introduced in order to keep the system invariant. The joint density function of $f(\theta,r)$ is 
+	Hamiltonian Monte Carlo \textcolor{red}{(HMC) \parencite{Brooks2011Handbook,duane1987hybrid}} is an efficient Markov chain Monte Carlo (MCMC) method that overcomes the \textcolor{red}{inefficiency} associated with the random walk and with the sensitivity to correlated parameters. An important step in HMC is the drawing of a set of auxiliary momentum variables \textcolor{red}{$r=\lbrace r_1,\ldots,r_d\rbrace$}, independently from the standard normal distribution for each \textcolor{red}{parameter in the set} \textcolor{red}{$\theta=\lbrace\theta_1,\ldots,\theta_d\rbrace$}.  The joint density function $f(\theta,r)$ of $\theta$ and $r$ is given by
 	\begin{equation}
 		f(\theta,r) \propto \exp \lbrace L(\theta)-K(r) \rbrace = \exp \lbrace -H(\theta,r) \rbrace,
 	\end{equation}
-	where $H(\theta,r)$ is the Hamiltonian system dynamics (HSD) equation with potential energy $-L(\theta)$ and kinetic energy $K(r)$, which represent the density functions of $\theta$ and $r$, respectively. The property of the dynamics is that it keeps the joint distribution invariant \parencite{Nishio2019Performance}. 
+	where $H(\theta,r)$ is the Hamiltonian system dynamics (HSD) equation with potential energy $L(\theta)$ and kinetic energy $K(r)$. An useful property of the dynamics is that it keeps the joint distribution invariant \parencite{Nishio2019Performance}. 
 	
-	The HSD is numerically approximated in discrete time space with the leapfrog method to maintain the total energy when new samples $(\theta^*,r^*)$ are drawn. The leapfrog method requires two parameters: the step size $\epsilon$ showing how far the next draw is from the current sample, and $L$ presenting the number of steps to move in the process. The new samples are accepted with probability 
+	The HSD is numerically approximated in discrete time space with the leapfrog method to maintain the total energy when a new sample $(\theta^*,r^*)$ is drawn. The leapfrog method requires two parameters: (i) a step size $\epsilon$, representing the distance between two consecutive draws, and (ii) a desired number of steps $L$, required to complete the process. A new sample is accepted with the probability 
 	\begin{equation}
 		\alpha = \min \left\{ 1, \frac{f(\theta^*,r^*)}{ f(\theta,r)} \right\}. 
 	\end{equation}
 	
-	Due to the \textcolor{red}{HMC} high sensitivity to the choice of $\epsilon$ and $L$, ultimately badly affecting the results, \textcite{Hoffman2014NoUturn} proposed the No-U-Turn Sampler (NUTS), which determines the step size by adapting it during the warm-up (burn-in) phase to a target acceptance rate, and then use it for all sampling iterations \parencite{Monnahan2017Faster}. The latter also omits $L$ by using the criterion 
+	Because \textcolor{red}{HMC} can be highly sensitive to the choice of $\epsilon$ and $L$, and in turn, may affect the results crucially, \textcite{Hoffman2014NoUturn} proposed the No-U-Turn Sampler (NUTS), which determines the step size adaptively during the warm-up (burn-in) phase to a target acceptance rate and uses it then for all sampling iterations \parencite{Monnahan2017Faster}. The NUTS also eliminates the need to specify a value of $L$ by using the criterion 
 	\begin{eqnarray}
 		\frac{d}{dt}\frac{(\theta^*-\theta)\cdot(\theta^*-\theta)}{2}=(\theta^*-\theta)\cdot\frac{d}{dt}(\theta^*-\theta)=(\theta^*-\theta)\cdot r^* <0,
 	\end{eqnarray}
 	where $r^*$ is the current momentum and $(\theta^*-\theta)$ is the distance from the initial position to the current position. The idea is that the trajectory will keep exploring the space until $\theta^*$ starts to move back towards $\theta$. 
 	
 	
-	To guarantee time reversibility and to converge to the correct distribution, NUTS uses a recursive algorithm that preserves reversibility by running the Hamiltonian simulation both forward and backward in time \parencite{Hoffman2014NoUturn}. This process starts with a slice variable $w$ which is uniformly distributed as $p(w\mid\theta, r) = U(0,f(\theta,r) )$, and generates a finite set of all $(\theta,r)$ in the doubling procedure and building binary trees process by randomly taking forward and backward leapfrog steps until 
+	To guarantee time reversibility and convergence to the correct distribution, NUTS uses a recursive algorithm that preserves reversibility by running the Hamiltonian simulation in both forward and backward time directions \parencite{Hoffman2014NoUturn}. This process starts by introducing a slice variable $w$ with conditional distribution $p(w\mid\theta, r) = U(0,f(\theta,r) )$, where $U(0,f(\theta,r))$ is the uniform distribution between the bounds zero and $f(\theta,r)$. The slice sampling generates a finite set of samples of the form $(\theta,r)$ during the doubling procedure and the binary tree building process by randomly taking forward and backward leapfrog steps until 
 	\begin{equation}
 		\begin{matrix}
 			(\theta^+-\theta^-)\cdot r^- <0 & \mbox{or} & (\theta^+-\theta^-)\cdot r^+ <0,
 		\end{matrix}
 	\end{equation}
-	where $\theta^-, r^-$ and $\theta^+, r^+$ are the leftmost and rightmost leaves of $\theta$ and $r$ in the subtree. The best candidate $(\theta^*,r^*)$ is uniformly sampled form the subset of all candidate $(\theta,r)$. 
+	where $(\theta^-, r^-)$ and $(\theta^+, r^+)$ are the leftmost and rightmost leaves, respectively, in the subtree. The best candidate $(\theta^*,r^*)$ is uniformly sampled from the subset of all candidate values of $(\theta,r)$. 
 	
 	% Precise definition and description of NUTS algorithm can be found at \textcite{Hoffman2014NoUturn}. 
 	
@@ -288,10 +288,10 @@
 	%Diagnose MCMC chains is essential to monitor whether the chains have converged in the process of posterior sampling. Traditionally, trace plots and auto-correlation functions were applied to diagnose Markov chains. Other than the mentioned methods, \textcite{gabry2019Visualization} suggest to use bi-variate scatter plots that mark the divergent transitions and divergence check plots, particularly, for HMC algorithm. 
 	
 	
-	\textcite{gelman2003Bayesian} suggests a few strategies for Bayesian model checks: (1) checking that the posterior inference \textcolor{red}{is} reasonable, given the substantive context of the model; (2) examining the sensitivity of the inference to reasonable changes in the prior distribution and the likelihood; and (3) checking that the model is capable of generating data like the observed data. One may refer to \textcite{gelman2004Exploratory, Weiss1994Pediatric, Gelman2013Bayesian, Congdon2019Bayesian} for explanations and applications. We focus on the third strategy by graphically checking the replicate and observed data for the reproducible capability of our model. 
+	A few common strategies for Bayesian model checking, as suggested by \textcite{gelman2003Bayesian}, are: (1) ensuring that the posterior inference \textcolor{red}{is} reasonable, given the substantive context of the model; (2) assessing the sensitivity of the inference to reasonable changes in the prior distribution and the likelihood; and (3) examining whether the model is capable of generating data similar in characteristics to the observed data. See \textcite{gelman2004Exploratory, Weiss1994Pediatric, Gelman2013Bayesian, Congdon2019Bayesian} for an overview of the topic. To examine the suitability of our Bayesian model for analysing an on-farm strip experiment, we particularly focused on the third strategy of graphically checking the similarities between the observed and simulated data from the fitted model. 
 	
 	
-	In an ideal situation, researchers are able to use independent data set which is not used in the modelling process to test the performances of different models. Alternatively, one may split one data set into training and testing data sets, and use \textcolor{red}{the training data for model fitting and the test data for evaluating the predictive performance of the fitted model}. However, it is not feasible for some experimental agricultural data \textcolor{red}{to reasonably split into training and testing data sets}. We will illustrate the testing of the model performance using the corn yield data from Las Rosas farm, Rio Cuarto, Cordoba, Argentina, described later. 
+	In an ideal situation, researchers would be able to use an independent data set, which is not used in the modelling process, to test the predictive performance of the fitted model. Alternatively, in the absence of such independent data, one may split the observed data into training and testing data sets, and use \textcolor{red}{the training data for model fitting and the test data for evaluating the predictive performance of the fitted model}. However, it may not even be feasible for many experimental data in agricultural applications \textcolor{red}{to reasonably split into training and testing data sets}. We illustrate our Bayesian model checking procedure below in Section~\ref{ss:PostCheck} using a real-life on-farm data from Las Rosas, Argentina. 
 	
 	
 	\subsection{Posterior predictive checking}
@@ -490,7 +490,7 @@
 	
 	With the above priors, the models were run on four parallel Markov chains in \rstan\ with each chain containing 2000 iterations, where the first 1000 iterations are run in the warm-up phase. The final posterior contains 4000 samples for each parameter. 	
 	
-	\subsection{Posterior checking}	
+	\subsection{Posterior checking}\label{ss:PostCheck}
 	
 	The prior predictive checking is a powerful tool for understanding the structure of the model. However, it is not possible to extend this technique to model selection and performance evaluation. We use MCMC diagnostic tools and posterior predictive checking for further analyses and comparison. 	
 	
