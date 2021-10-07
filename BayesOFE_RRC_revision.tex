@@ -297,33 +297,29 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	\subsection{Posterior predictive checking}
 	
 	
-	The posterior predictive checking uses the posterior \textcolor{red}{distribution} of the \textcolor{red}{model} parameters to regenerate the observations. The idea behind this concept is that if a model is a good fit we should be able to use it to generate data that resemble the observed data \parencite{gabry2019Visualization}. In order to illustrate it, let $\bm{Y}^{rep}$ denotes \textcolor{red}{a} replicated data \textcolor{red}{set} providing the replication process is conducted with the same value of $\theta$ that generated the observed data $\bm{Y}$. Then $\bm{Y}^{rep}$ is governed by the posterior predictive distribution 
-	\begin{equation}
+	The posterior predictive checking uses the posterior \textcolor{red}{distribution} of the \textcolor{red}{model} parameters to regenerate the observations. The idea behind this concept is that, if a model is a good fit, we should be able to use it to generate data that resemble the observed data \parencite{gabry2019Visualization}. Let $\bm{Y}^{rep}$ denote a simulated or replicated data \textcolor{red}{set}, generated using the posterior predictive distribution 
+	\begin{equation}\label{eq:PredPost}
 		p(\bm{Y}^{rep} \mid \bm{Y}) = \int p(\bm{Y}^{rep} \mid \theta)p(\theta \mid \bm{Y}) d\theta. 
 	\end{equation}
-	The samples $\bm{Y}^{rep}$ are checked against the data $\bm{Y}$ \parencite{dipakdey2005Bayesian, Congdon2019Bayesian}. 
-	
-	
-	The application of posterior predictive distributions is robust to prior specification because the details of the prior are washed out by the likelihood \parencite{gelman2017Prior}.
+	To assess the fitted model, several data sets are simulated from 	$p(\bm{Y}^{rep} \mid \bm{Y})$, and each of them is compared with the observed data $\bm{Y}$ \parencite{dipakdey2005Bayesian, Congdon2019Bayesian}. The application of posterior predictive distributions is robust to prior specification because the details of the prior are washed out by the likelihood \parencite{gelman2017Prior}.
 	
 	
 	
 	\subsection{Model diagnosis and evaluation}
 	
-	
-	Leave-one-out (LOO) cross validation (CV) is widely used for model evaluation and selection. \textcolor{red}{It} is conducted by omitting one observation at a time, fitting the model based on the remaining data, repeating the process and finally using the average mean square error (MSE) to compare the models. In Bayesian statistics the expected $\log$ LOO predictive density \textcolor{red}{(ELPD)} is used to measure the predictive accuracy : 
+	The leave-one-out (LOO) cross validation (CV) is widely used for model evaluation. \textcolor{red}{It} is performed by first omitting an observation and fitting the model based on the remaining data, and then by computing the predictive error associated with the omitted observation. The process is repeated for all observations, omitting one observation at a time. The predictive errors from the LOO CV are finally used to compute an estimate of the average out-of-sample predictive error for a given model. In Bayesian statistics, the expected $\log$ LOO predictive density \textcolor{red}{(ELPD)} is used to measure the predictive accuracy : 
 	\begin{equation}\label{eq:elpd}
 		\mbox{\elpd} = \sum_{i=1}^{n}\log p(y_i\mid y_{-i}),
 	\end{equation}
-	where $p(y_i \mid y_{-i}) = \int p(y_i \mid \theta)p(\theta \mid y_{-i})d\theta$ is the LOO predictive density with the $i$-th data omitted from the data set \parencite{Vehtari2017Practical}. The disadvantage in this measure is the increased computing due to the model being refitted $n$ times. \textcite{Burkner2020Efficient} proposed an approximated LOO CV using only a single model fit and calculating the pointwise $\log$ predictive density as a fast approximation to the exact LOO CV. It uses the Pareto-smoothed importance-sampling \textcolor{red}{(PSIS)} \parencite{Vehtari2017Practical} algorithm on the pointwise $\log$-likelihood matrix for each draw $m$ from the full posterior distribution and obtains a PSIS-LOO-CV estimate, which is
-	\begin{equation}
+	where $p(y_i \mid y_{-i}) = \int p(y_i \mid \theta)p(\theta \mid y_{-i})d\theta$ is the LOO predictive density with the $i$-th observation omitted from the data set \parencite{Vehtari2017Practical}. One disadvantage of this measure is the high computational cost due to the model being refitted $n$ times. Recently, an approximated LOO CV has been proposed by \textcite{Burkner2021Efficient}, using only a single model fit and calculating the pointwise $\log$ predictive density as a fast approximation to the exact LOO CV. It uses the Pareto-smoothed importance-sampling \textcolor{red}{(PSIS)} algorithm \parencite{Vehtari2017Practical}, which draws $n$ samples, each of size $M$, from the posterior distribution. For each observation, then the pointwise $\log$-likelihood is computed based on the $M$ sampled values, and  the PSIS-LOO-CV estimate is computed taking a weighted sum over all $n$ pointwise $\log$-likelihood as follows:
+	\begin{equation}\label{eq:PSIS}
 		\widehat{\mbox{\psis}} = \sum_{i=1}^n\log\left(  \frac{ \sum_{m=1}^{M} p(y_i\mid \theta^{(m)})w_i^{(m)} }{ \sum_{m=1}^{M}w_i^{(m)} }\right), 
 	\end{equation}
-	where $w_i^{(m)}$ are stabilised weights by PSIS, $m = 1, \ldots, M$.  
+	where $w_i^{(m)}$ are stabilised weights computed during PSIS, $m = 1, \ldots, M$. See \textcite{Vehtari2017Practical} for the details of computing the stabilised weights in PSIS.
 	
 	
 	
-	The resulting PSIS LOO CV approximations can be used for model diagnosis and comparison. The advantage of PSIS is that it automatically computes an empirical similarity between the full data predictive distribution \textcolor{red}{and} the LOO predictive distribution for each left out point \textcolor{red}{in LOO CV} \parencite{gabry2019Visualization}. The estimated tail shape parameter $\hat{k}$ of the generalised Pareto distribution can be used for assessing the reliability and approximate convergence rate of the estimates. If $\hat{k}<0.5$ the distribution of raw importance ratios has finite variance and the central limit theorem holds. In practice the model is still robust for $\hat{k}$ values up to 0.7. Otherwise the variance and the mean of the raw ratios distribution do not exist \parencite{Vehtari2017Practical}. 
+	The resulting PSIS-LOO-CV \eqref{eq:PSIS} can be used for model diagnosis and comparison. The advantage of PSIS is that it automatically computes an empirical similarity between the full data predictive distribution \textcolor{red}{and} the LOO predictive distribution for each omitted observation \textcolor{red}{in LOO CV} \parencite{gabry2019Visualization}. Another useful quantity, obtained during PSIS, is the estimated tail shape parameter $\hat{k}$ of the generalised Pareto distribution. This estimate can also be used for assessing the reliability of the model. If $\hat{k}<0.5$ the distribution of raw importance ratios has finite variance and the central limit theorem holds; see \textcite{Vehtari2017Practical} for a detailed discussion on the raw importance ratio. In practice, however, the model may still be robust for $\hat{k}$ values up to 0.7. Otherwise the variance and the mean of the raw ratios distribution do not exist \parencite{Vehtari2017Practical}. 
 	
 	
 	
@@ -343,14 +339,14 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	
 	
 	
-	\section{Analysis of Las Rosas data}\label{sec:analysis}
+	\section{Analysis of a real-life large strip experiment}\label{sec:analysis}
 	
 	A part of Las Rosas data set, which is publicly available by the name of \texttt{lasrosas.corn} in the \R-package \texttt{agridat} \parencite{Edmondson2014Agridat}, was used in our study. In this section, we adopt the proposed Bayesian approach \textcolor{red}{to analyse} the data set. 
 	
 	
-	\subsection{Data visualisation}
+	\subsection{Las Rosas data}
 	
-	The data were produced by a yield monitor in an Argentinian corn field trial conducted by incorporating six nitrogen rate treatments \textcolor{red}{which are systematically allocated} in three replicated blocks comprising eighteen strips \textcolor{red}{(ranges) and 93 rows}. In order to account for some of the spatial variation (Figure \ref{fig:lasrossa}), a four-level topographic factor was defined: W (West slope), HT (Hilltop), E (East slope) and LO (Low East).  
+	The data were produced by a yield monitor in an Argentinian corn field trial conducted by incorporating six nitrogen rate treatments \textcolor{red}{which are systematically allocated} in three replicated blocks comprising eighteen strips \textcolor{red}{(columns) and 93 rows}. In order to account for some of the spatial variation (Figure \ref{fig:lasrossa}), a four-level topographic factor was defined: W (West slope), HT (Hilltop), E (East slope) and LO (Low East).  
 	
 	
 	\begin{figure}[!htp]
@@ -389,7 +385,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	
 	\subsection{Statistical models and prior predictive simulations}
 	
-	\textcolor{red}{To obtain the map of locally varying optimal input rates, we assume a quadratic form of the response in model \eqref{eq:underlying}. In other words, the levels of explanatory variables and random effects are $l=3$ and $k=3$. Hence, the optimal treatment is possible by calculating a simple quadratic equation for each grid when the coefficients become available. In the meantime, to} demonstrate the power of the proposed model \eqref{eq:underlying} where the random parameters $\bm{u}$ are spatially correlated, we compare the model with the one without spatial correlation and used it as a benchmark model. We also compare two distribution assumptions, the Gaussian  with the Student-$t$ distribution in order to decide which better specifies the model. Therefore, we define four models, as illustrated in Table \ref{tb:models}. 
+	\textcolor{red}{To obtain the map of locally varying optimal input rates, we specified a quadratic regression model, in which the corn yield is modelled as a quadratic function of the nitrogen rate. Thus, the number of fixed and random effects in \eqref{eq:underlying} are $l=3$ and $k=3$, respectively. The optimal treatment can be determined by estimating the coefficients of the quadratic regression model at each grid point.} To demonstrate the flexibility of the proposed model \eqref{eq:underlying}, in which the random parameters $\bm{u}$ are spatially correlated, we compare it with the one without spatial correlation, used as a benchmark model for the rest of the analysis. We also compare two distributional assumptions in the context of specifying the likelihood -- the popular Gaussian likelihood has been compared with the Student-$t$ distribution in order to assess whether the  Gaussian model, often chosen as the default model, is misspecified for our example data set. We define our four models below in Table \ref{tb:models}. 
 	
 	
 	\begin{table}[!htp]
@@ -404,9 +400,9 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	\end{table}
 	
 	
-	The modelling process starts by choosing weakly informative priors for model 1. We can generate any data set that is plausibly observed through the model by using weakly informative priors. 
+	The modelling process starts by selecting appropriate priors for the model parameters by comparing the simulated responses and the observed responses graphically, as shown in Figure~\ref{fig:priorcheck}. In the right panel of Figure~\ref{fig:priorcheck}, we have chosen weakly informative priors to simulate responses based on the quadratic regression function. In the left panel, we show the simulated responses obtained using vague priors for the regression coefficients.
 	
-	For instance, vague priors are $b_0\sim \N(\mu,100)$, $b_1,b_2\sim \N(0,100)$ and $\sigma_e\sim IG(1,100)$, where $IG$ is the inverse Gamma distribution. Similarly, we assume $u_{ki}\sim \N(0,\sigma_{k}^2)$ with $\sigma_k^2\sim IG(1,100)$ and $k=0, 1, 2$ at grid $s_i$. $\mu$ is either mean or median of the observed data. Alternatively, we can choose weakly informative priors $b_0\sim \N(80,10)$, $b_1\sim \N(0,0.01)$, $b_2\sim \N(0,0.001)$, $\sigma_{0}\sim \N_+(0,1)$, $\sigma_{1}\sim \N_+(0,0.01)$, $\sigma_{2}\sim \N_+(0,0.001)$, $R_u\sim \mbox{LKJcorr}(1)$ and $\sigma_e\sim \N_+(0,1)$, where $\N_+(\cdot)$ is the positive half Gaussian distribution. 
+	The vague priors used in our analysis are $b_0\sim \N(\mu,100)$, $b_1,b_2\sim \N(0,100)$ and $\sigma_e\sim IG(1,100)$, where $\mu$ is the median of the observed responses and $IG$ refers to the inverse Gamma distribution. For random e assume $u_{ki}\sim \N(0,\sigma_{k}^2)$ with $\sigma_k^2\sim IG(1,100)$ and $k=0, 1, 2$ at grid $s_i$.  Alternatively, we can choose weakly informative priors $b_0\sim \N(80,10)$, $b_1\sim \N(0,0.01)$, $b_2\sim \N(0,0.001)$, $\sigma_{0}\sim \N_+(0,1)$, $\sigma_{1}\sim \N_+(0,0.01)$, $\sigma_{2}\sim \N_+(0,0.001)$, $R_u\sim \mbox{LKJcorr}(1)$ and $\sigma_e\sim \N_+(0,1)$, where $\N_+(\cdot)$ is the positive half Gaussian distribution. 
 	
 	For the correlation matrix $R_u$, using $\mbox{LKJcorr}(\epsilon=1)$ is because we assume that $\bm{u}_i$ from grid $i$ is weakly correlated. To be specific, the $3\times3$ symmetric correlation matrix $R_u$ is  
 	\begin{equation}\label{eq:RMat}
