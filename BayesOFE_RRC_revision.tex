@@ -135,7 +135,7 @@
 	\end{equation}
 	where $\otimes$ denotes the Kronecker product, $\sigma^2$ is the residual variance component, and the parameters $\rho_c$ and $\rho_r$ determine the strengths of spatial correlations in the column and row directions, respectively. In the case where there is no spatial autocorrelation, the residual variance-covariance matrix becomes $\Sigma_e=\sigma^2 I_n$. 
 	
-	When analysing a small plot experiment using a linear mixed effects model with $k$ random terms, each of dimension $m\times 1$, we would typically assume that the random effects are independently distributed of each other and consider the variance matrix $G=\oplus_{j=1}^k\sigma_{u_j}^2I_m$ for $\bm{u}$ with variance components $\sigma^{2}_{u_j}$, $j=1,\ldots,k$. In contrast, any analysis of a large strip experiment would require to incorporate correlated random effects in the regression model to account for the spatial correlations amongst treatment effects, as discussed below in the next two subsections. 
+	When analysing a small plot experiment using a linear mixed effects model with $k$ random terms, each of dimension $m\times 1$, we would typically assume that the random effects are independently distributed of each other and consider the variance matrix $G=\oplus_{j=1}^h\sigma_{u_j}^2I_m$ for $\bm{u}$ with variance components $\sigma^{2}_{u_j}$, $j=1,\ldots,h$. In contrast, any analysis of a large strip experiment would require to incorporate correlated random effects in the regression model to account for the spatial correlations amongst treatment effects, as discussed below in the next two subsections. 
 	
 	\subsection{Bayesian hierarchical model}\label{sec:hierarchical}
 	
@@ -144,12 +144,12 @@
 	Using the notation introduced in the previous section, the underlying model for analysing a large strip experiment is given by 
 	\begin{equation}\label{eq:underlying}
 		\begin{split}
-			y(s_i)\mid \bm{u}_i,\theta_u,\sigma_e &\sim \mathcal{MD}\left( \sum_{m=1}^{l}b_m x_m(s_i) + \sum_{j=1}^{k}u_j(s_i)z_j(s_i),e(s_i)\right), \\
+			y(s_i)\mid \bm{u}_i,\theta_u,\sigma_e &\sim \mathcal{MD}\left( \sum_{m=1}^{l}b_m x_m(s_i) + \sum_{j=1}^{h}u_j(s_i)z_j(s_i),e(s_i)\right), \\
 			\bm{u}_i \mid \theta_u &\sim \N(0,V_u(\theta_u)), \\
 			e(s_i) \mid \sigma_e &\sim \N(0,\sigma_e^2), 
 		\end{split}
 	\end{equation}
-	where $\mathcal{MD}(\cdot)$ is a multivariate distribution assumed to be either multivariate Gaussian or Student $t$; $b_1, \ldots, b_l$ are fixed effects corresponding to the $l$ explanatory variables $x_1,\ldots, x_l$; $z_1,\ldots, z_k$ denote $k$ \textcolor{red}{variables whose effects are fitted as random effects}; $u_j(s)$ denotes the \textcolor{red}{random effect corresponding to $z_j$} at grid $s_i\in\mathcal{S}$, $i=1,\ldots,n$; $\bm{u}_i$ is the vector of all random effects at $s_i$; $\theta_u$ is a set of parameters of the covariance matrix $V_u$, and $\sigma_e$ is the error standard deviation, assumed to be distributed as either Gamma, half-Cauchy, or half-normal. 
+	where $\mathcal{MD}(\cdot)$ is a multivariate distribution assumed to be either multivariate Gaussian or Student $t$; $b_1, \ldots, b_l$ are fixed effects corresponding to the $l$ explanatory variables $x_1,\ldots, x_l$; $z_1,\ldots, z_h$ denote $h$ \textcolor{red}{variables whose effects are fitted as random effects}; $u_j(s)$ denotes the \textcolor{red}{random effect corresponding to $z_j$} at grid $s_i\in\mathcal{S}$, $i=1,\ldots,n$; $\bm{u}_i$ is the vector of all random effects at $s_i$; $\theta_u$ is a set of parameters of the covariance matrix $V_u$, and $\sigma_e$ is the error standard deviation, assumed to be distributed as either Gamma, half-Cauchy, or half-normal. 
 	
 	
 	
@@ -196,7 +196,7 @@
 	\begin{equation}\label{eq:varmat}
 		V_u = B(\sigma_u)R_u B(\sigma_u),
 	\end{equation}
-	where $B(\sigma_u)$ denotes the diagonal matrix with diagonal elements \textcolor{red}{$\sigma_{u_1},\ldots,\sigma_{u_k}$, the standard deviation of $u_1,\ldots,u_k$, and $R_u$ is the matrix whose diagonal elements are equal to unity and off-diagonal elements are the correlation coefficients (details are given in \eqref{eq:RMat}) between the random effects}. The prior distribution of $V_u$ can now be specified by specifying priors separately for $B(\sigma_u)$ and $R_u$ \parencite{ McElreath2015Statistical}. A possible choice of a prior for the standard deviation parameters $\sigma_{u_k}$ in $B(\sigma_u)$ is an inverse Wishart distribution \parencite{Kass2006Default}; \textcolor{red}{another choice is an inverse Gamma distribution}. However, in our setting, a weakly informative prior is preferred. We adopted the \textcolor{red}{half-normal distribution in our work for all $\sigma_{u_i}$}, $i=1,\ldots,k$. For the matrix $R_u$ with correlation coefficients, we specify the Lewandowski-Kurowicka-Joe (LKJ) distribution \parencite{Lewandowski2009Generating} as the prior distribution, and this specification is given by
+	where $B(\sigma_u)$ denotes the diagonal matrix with diagonal elements \textcolor{red}{$\sigma_{u_1},\ldots,\sigma_{u_h}$, the standard deviation of $u_1,\ldots,u_h$, and $R_u$ is the matrix whose diagonal elements are equal to unity and off-diagonal elements are the correlation coefficients (details are given in \eqref{eq:RMat}) between the random effects}. The prior distribution of $V_u$ can now be specified by specifying priors separately for $B(\sigma_u)$ and $R_u$ \parencite{ McElreath2015Statistical}. A possible choice of a prior for the standard deviation parameters $\sigma_{u_j}$ in $B(\sigma_u)$ is an inverse Wishart distribution \parencite{Kass2006Default}; \textcolor{red}{another choice is an inverse Gamma distribution}. However, in our setting, a weakly informative prior is preferred. We adopted the \textcolor{red}{half-normal distribution in our work for all $\sigma_{u_j}$}, $j=1,\ldots,h$. For the matrix $R_u$ with correlation coefficients, we specify the Lewandowski-Kurowicka-Joe (LKJ) distribution \parencite{Lewandowski2009Generating} as the prior distribution, and this specification is given by
 	\begin{equation}\label{eq:RPrior}
 		R_u \sim \text{LKJcorr}(\epsilon),
 	\end{equation}
@@ -297,7 +297,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	\subsection{Posterior predictive checking}
 	
 	
-	The posterior predictive checking uses the posterior \textcolor{red}{distribution} of the \textcolor{red}{model} parameters to regenerate the observations. The idea behind this concept is that, if a model is a good fit, we should be able to use it to generate data that resemble the observed data \parencite{gabry2019Visualization}. Let $\bm{Y}^{rep}$ denote a simulated or replicated data \textcolor{red}{set}, generated using the posterior predictive distribution 
+	The posterior predictive (PP) checking uses the posterior \textcolor{red}{distribution} of the \textcolor{red}{model} parameters to regenerate the observations. The idea behind this concept is that, if a model is a good fit, we should be able to use it to generate data that resemble the observed data \parencite{gabry2019Visualization}. Let $\bm{Y}^{rep}$ denote a simulated or replicated data \textcolor{red}{set}, generated using the posterior predictive distribution 
 	\begin{equation}\label{eq:PredPost}
 		p(\bm{Y}^{rep} \mid \bm{Y}) = \int p(\bm{Y}^{rep} \mid \theta)p(\theta \mid \bm{Y}) d\theta. 
 	\end{equation}
@@ -359,33 +359,42 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 		\space
 		\begin{subfigure}[t]{0.45\textwidth}
 			\centering
+			\includegraphics[height=6.0cm,width=0.9\linewidth]{Images/lasrossa_view02}
+			\caption{Coloured by different topographic factors: West slope (W), Hilltop (HT), East slope (E) and Low East (LO).}\label{fig:lasrossascatter}
+		\end{subfigure}
+		\begin{subfigure}[t]{0.45\textwidth}
+			\centering
 			\includegraphics[height=6.3cm,width=\linewidth]{Images/lasrossa_view06}
 			\caption{Six nitrogen treatment levels are systematically allocated into three replicates.}\label{fig:lasrossatopo}
 		\end{subfigure}
-		\begin{subfigure}[t]{0.45\textwidth}
-			\centering
-			%\includegraphics[height=6.3cm]{Images/lasrossa_view03}
-			%\caption{Histogram of yield by different topographic factors: West slope (W), Hilltop (HT), East slope (E) and Low East (LO).}
-			\includegraphics[height=6.3cm,width=\linewidth]{Images/lasrossa_view05}
-			\caption{Linear models fitted within each topographic factor: West slope (W), Hilltop (HT), East slope (E) and Low East (LO).}\label{fig:lasrossascatter}
-		\end{subfigure}
 		\space
+% 		\begin{subfigure}[t]{0.45\textwidth}
+% 			\centering
+% 			\includegraphics[height=6.3cm]{Images/lasrossa_view03}
+% 			\caption{Histogram of yield by different topographic factors: West slope (W), Hilltop (HT), East slope (E) and Low East (LO).}\label{fig:lasrossascatter}
+% 		\end{subfigure}
+% 		\begin{subfigure}[t]{0.45\textwidth}
+% 			\centering
+% 			\includegraphics[height=6.3cm,width=\linewidth]{Images/lasrossa_view05}
+% 			\caption{Linear models fitted within each topographic factor: West slope (W), Hilltop (HT), East slope (E) and Low East (LO).}\label{fig:lasrossascatter}
+% 		\end{subfigure}
+		%\space
 		\begin{subfigure}[t]{0.45\textwidth}
 			\centering
-			\includegraphics[height=5.9cm,width=\linewidth]{Images/lasrossa_view04}
+			\includegraphics[height=5.7cm,width=\linewidth]{Images/lasrossa_view04}
 			\caption{Bimodal histogram and density plot of yield.}\label{fig:lasrossahist}
 		\end{subfigure}
 		\caption{Visualisation of Las Rosas yield monitor data for harvests in 2001.}\label{fig:lasrossa}
 	\end{figure}
 	
 	
-	Additionally, a geographic projection was applied to the data. The latter transforms the geo-spatial coordinates to planar coordinates expressed in meters and assists with the model fitting \parencite{Rakshit2020Novel}. The field area of the Las Rosas experiment is approximately 810 metres long and 150 metres wide.
+	Additionally, a geographic projection was applied to the data. It transforms the geo-spatial coordinates to planar coordinates expressed in meters and assists with the model fitting \parencite{Rakshit2020Novel}. The field area of the Las Rosas experiment is approximately 810 metres long and 150 metres wide.
 	
 	
 	
 	\subsection{Statistical models and prior predictive simulations}
 	
-	\textcolor{red}{To obtain the map of locally varying optimal input rates, we specified a quadratic regression model, in which the corn yield is modelled as a quadratic function of the nitrogen rate. Thus, the number of fixed and random effects in \eqref{eq:underlying} are $l=3$ and $k=3$, respectively. The optimal treatment can be determined by estimating the coefficients of the quadratic regression model at each grid point.} To demonstrate the flexibility of the proposed model \eqref{eq:underlying}, in which the random parameters $\bm{u}$ are spatially correlated, we compare it with the one without spatial correlation, used as a benchmark model for the rest of the analysis. We also compare two distributional assumptions in the context of specifying the likelihood -- the popular Gaussian likelihood has been compared with the Student-$t$ distribution in order to assess whether the  Gaussian model, often chosen as the default model, is misspecified for our example data set. We define our four models below in Table \ref{tb:models}. 
+	\textcolor{red}{To obtain the map of locally varying optimal input rates, we specified a quadratic regression model, in which the corn yield is modelled as a quadratic function of the nitrogen rate. The optimal treatment can be determined by estimating the coefficients of the quadratic regression model at each grid point.} To demonstrate the flexibility of the proposed model \eqref{eq:underlying}, in which the random parameters $\bm{u}$ are spatially correlated, we compare it with the one without spatial correlation, used as a benchmark model for the rest of the analysis. We also compare two distributional assumptions in the context of specifying the likelihood -- the popular Gaussian likelihood has been compared with the Student-$t$ distribution in order to assess whether the  Gaussian model, often chosen as the default model, is misspecified for our example data set. We define our four models below in Table \ref{tb:models}. 
 	
 	
 	\begin{table}[!htp]
@@ -402,15 +411,17 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	
 	The modelling process starts by selecting appropriate priors for the model parameters by comparing the simulated responses and the observed responses graphically, as shown in Figure~\ref{fig:priorcheck}. In the right panel of Figure~\ref{fig:priorcheck}, we have chosen weakly informative priors to simulate responses based on the quadratic regression function. In the left panel, we show the simulated responses obtained using vague priors for the regression coefficients.
 	
-	The vague priors used in our analysis are $b_0\sim \N(\mu,100)$, $b_1,b_2\sim \N(0,100)$ and $\sigma_e\sim IG(1,100)$, where $\mu$ is the median of the observed responses and $IG$ refers to the inverse Gamma distribution. For random e assume $u_{ki}\sim \N(0,\sigma_{k}^2)$ with $\sigma_k^2\sim IG(1,100)$ and $k=0, 1, 2$ at grid $s_i$.  Alternatively, we can choose weakly informative priors $b_0\sim \N(80,10)$, $b_1\sim \N(0,0.01)$, $b_2\sim \N(0,0.001)$, $\sigma_{0}\sim \N_+(0,1)$, $\sigma_{1}\sim \N_+(0,0.01)$, $\sigma_{2}\sim \N_+(0,0.001)$, $R_u\sim \mbox{LKJcorr}(1)$ and $\sigma_e\sim \N_+(0,1)$, where $\N_+(\cdot)$ is the positive half Gaussian distribution. 
+	The vague priors used in our analysis are $b_0\sim \N(\mu,100)$, $b_1,b_2\sim \N(0,100)$ and $\sigma_e\sim IG(1,100)$, where $\mu$ is the median of the observed responses and $IG$ refers to the inverse Gamma distribution. We assume $u_{i_h}\sim \N(0,\sigma_{h}^2)$ with $\sigma_h^2\sim IG(1,100)$ and $h=0, 1, 2$ at grid $s_i$.  Alternatively, we can choose weakly informative priors $b_0\sim \N(80,10)$, $b_1\sim \N(0,0.01)$, $b_2\sim \N(0,0.001)$, $\sigma_{0}\sim \N_+(0,1)$, $\sigma_{1}\sim \N_+(0,0.01)$, $\sigma_{2}\sim \N_+(0,0.001)$, $R_u\sim \mbox{LKJcorr}(1)$ and $\sigma_e\sim \N_+(0,1)$, where $\N_+(\cdot)$ is the positive half Gaussian distribution. 
 	
-	For the correlation matrix $R_u$, using $\mbox{LKJcorr}(\epsilon=1)$ is because we assume that $\bm{u}_i$ from grid $i$ is weakly correlated. To be specific, the $3\times3$ symmetric correlation matrix $R_u$ is  
+	The  correlation matrix $R_u$, defined in \eqref{eq:varmat}, is given by
 	\begin{equation}\label{eq:RMat}
 		R_u = \begin{bmatrix}
 			1 & \rho_{12} &\rho_{13}  \\ \rho_{21} & 1 & \rho_{23} \\ \rho_{31} & \rho_{32} & 1 
 		\end{bmatrix},
 	\end{equation}
-	where $\rho$s are the pairwise correlation parameters. Figure \ref{fig:LKJdensity} demonstrates how the distribution of $\rho$ is influenced by $\epsilon$. Small $\epsilon$ leads to a wider tail and big $\epsilon$ narrows down the tail. In the case where $\epsilon = 1$, all correlations are equally plausible. As $\epsilon$ increases, the variables are more likely to be independent. 
+	where $\rho$s are the pairwise correlation parameters. For the correlation matrix $R_u$, we select $\mbox{LKJcorr}(\epsilon)$ with $\epsilon = 1$, which represents weak correlation amongst $\bm{u}_i$ values at grid $i$, $i=1,\ldots, n$.  
+	
+	Figure \ref{fig:LKJdensity} demonstrates how the distribution of $\rho$ is influenced by $\epsilon$. A small $\epsilon$ leads to a wider tail and a big $\epsilon$ typically narrows down the tail. In the case of $\epsilon = 1$, all correlations are equally plausible. As $\epsilon$ increases, the variables are more likely to be independent. 
 	
 	\begin{figure}[!htp]
 		\centering	
@@ -431,7 +442,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	
 	
 	
-	Figure \ref{fig:priorcheck} compares the regenerated data with vague and weakly informative priors. When the vague priors are applied, model 1 regenerates extremely small and large values which are implausible for the yield data. This is mostly because the vague priors disregard practical knowledge. Applying weakly informative priors avoids negative values and keeps the simulations within a reasonable interval. Even though some simulations are not perfect, the priors are overall good enough and reflect common knowledge. On the other hand, if the priors are too informative, the posterior distribution maybe badly influenced and result in partial exploration of the posterior space. 
+	Figure \ref{fig:priorcheck} compares the simulated data with vague and weakly informative priors. When the vague priors are applied, Model 1 generates extremely small and large values, which are highly unlikely for our corn yield data set. This is mostly because the vague priors disregard practical knowledge. The use of weakly informative priors avoids negative values and keeps the simulations within a reasonable interval. Even though some simulations are not perfect, the weakly informative priors overall exhibit good results that reflect commonsense knowledge about the yield response. On the other hand, if the priors are too informative, the posterior distribution maybe badly influenced and result in partial exploration of the posterior space. 
 	
 	%where $t$ is the Student-$t$ distribution in the form
 	%\begin{equation}
@@ -452,17 +463,17 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			\includegraphics[width=\linewidth]{Images/priorcheck_weak}
 			\caption{With weakly informative priors}
 		\end{subfigure}
-		\caption{Capability of re-generating observed data with different priors by running 100 simulations. Vague priors failed in regenerating and lead to extreme values. Weakly informative priors give plausible regenerated data. }\label{fig:priorcheck}
+		\caption{Capability of regenerating observed data with different priors by running 100 simulations. Vague priors failed in regenerating and lead to extreme values. Weakly informative priors give plausible regenerated data. }\label{fig:priorcheck}
 	\end{figure}
 	
 	
 	
-	In model 2, in addition to the priors used in model 1, we use priors: $\rho_c,\rho_r\sim U(0,1)$, a uniform distribution between 0 and 1. In model 3 and 4, an extra parameter of degrees of freedom $\nu\sim \Gamma(2,0.1)$ is assigned to the prior, as suggested by \textcite{Juarez2010ModelBased}, aiming to keep the prior simple. 
+	In Model 2, in addition to the priors used in Model 1, we need priors for the parameters $\rho_c$ and $\rho_r$, and suppose $\rho_c,\rho_r\sim U(0,1)$, where $U(0,1)$ is the uniform distribution between 0 and 1. In Model 3 and 4, we have an extra parameter $\nu$ for the degrees of freedom, and we specify a Gamma prior $\nu\sim \Gamma(2,0.1)$, as suggested by \textcite{Juarez2010ModelBased}. 
 	
-	A summary of the priors is listed in Table \ref{tb:priors}. It is not recommended to use the same priors for different models. In addition, if a new prior is proposed for a new parameter, checking the prior predictive ability is recommended for each model. In this study, due to the fact that our models regenerated plausible outcomes, we built up the models by using the same weakly informative priors and only adding priors for the new parameters, without changing the rest of the priors.
+	In Table \ref{tb:priors}, we present the complete list of priors selected for our study. In general, it is not recommended to use the same priors across all the different models listed in Table \ref{tb:priors}. Furthermore, if a new prior is proposed for a new parameter, examining the suitability of that prior is recommended for each model. In this study, we have checked the suitability of all the priors for all our four models, and it turns out that the same priors, listed in the top-half of Table~\ref{tb:priors}, work well for all the four models (see Figure~\ref{fig:priorcheck4models} for further details). Consequently, we built the models by using the same weakly informative priors for a number of common parameters, and only adding new priors (listed in the bottom-half of Table~\ref{tb:priors}) for the additional parameters.
 	
 	
-	Additionally, NUTS does not require conjugate priors, which means the results are still valid if our priors are Gaussian but for the data Student distribution is assumed. 
+	%Additionally, NUTS does not require conjugate priors, which means the results are still valid if our priors are Gaussian but for the data Student-$t$ distribution is assumed. 
 	
 	
 	\begin{table}[!htp]
@@ -481,16 +492,16 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			$\rho_r$ & --- & $U(0,1)$ & --- &  $U(0,1)$ \\ 		
 			$\nu$ & --- &  --- & $\Gamma(2,0.1)$ & $\Gamma(2,0.1)$ \\ 
 			\bottomrule
-		\end{tabular}\caption{Priors of four models.}\label{tb:priors}
+		\end{tabular}\caption{Priors of four models. Top-half: priors for common parameters of four models; Bottom-half: new priors for additional parameters.}\label{tb:priors}
 	\end{table}
 	
 	With the above priors, the models were run on four parallel Markov chains in \rstan\ with each chain containing 2000 iterations, where the first 1000 iterations are run in the warm-up phase. The final posterior contains 4000 samples for each parameter. 	
 	
 	\subsection{Posterior checking}\label{ss:PostCheck}
 	
-	The prior predictive checking is a powerful tool for understanding the structure of the model. However, it is not possible to extend this technique to model selection and performance evaluation. We use MCMC diagnostic tools and posterior predictive checking for further analyses and comparison. 	
+	The prior predictive checking is a powerful tool for understanding the structure of the model. However, it is not possible to extend this technique to model selection and performance evaluation. We use MCMC diagnostic tools and PP checking for further analyses and comparison. 	
 	
-	We start with the posterior predictive (PP) checking to visualise the performance of the four models. Figure \ref{fig:ppcheck} displays the results of the PP checking. Appears that if the random parameters are not spatially correlated, model 1 and 3 are incapable of regenerating the data and capturing adequately the distribution of the observations. On contrary, models 2 and 4 show promising results. 	
+	We start with the PP checking to visualise the performance of the four models. Figure \ref{fig:ppcheck} displays the results of the PP checking. Appears that if the random parameters are not spatially correlated, Model 1 and 3 are incapable of simulating the data that adequately capture the distribution of the observations. On contrary, Models 2 and 4 show promising results. 	
 	
 	\begin{figure}[!htp]
 		\centering
@@ -514,57 +525,57 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	\end{figure}
 	
 	
-	Figure \ref{fig:skewcheck} illustrates the observed skewness of the posterior predictive distribution for the four models. While models 2 and 4 capture the observed skewness, model 1 and 3 demonstrate model misspecification. 
+	Figure \ref{fig:skewcheck} illustrates the observed skewness of the posterior predictive distribution for the four models. While Model 2 and 4 capture the observed skewness, Model 1 and 3 demonstrate model misspecification. 
 	
 	\begin{figure}[!htp]
 		\centering
 		\begin{subfigure}[t]{0.45\textwidth}
-			\includegraphics[width=\linewidth]{Images/skew_GSRNS}
+			\includegraphics[width=\linewidth]{Images/skew_GSRNS_scale.pdf}
 			\caption{Skew check of Model 1}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.45\textwidth}
-			\includegraphics[width=\linewidth]{Images/skew_GSRand}
+			\includegraphics[width=\linewidth]{Images/skew_GSRand_scale.pdf}
 			\caption{Skew check of Model 2}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.45\textwidth}
-			\includegraphics[width=\linewidth]{Images/skew_STRNS}
+			\includegraphics[width=\linewidth]{Images/skew_STRNS_scale.pdf}
 			\caption{Skew check of Model 3}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.45\textwidth}
-			\includegraphics[width=\linewidth]{Images/skew_STRand}
+			\includegraphics[width=\linewidth]{Images/skew_STRand_scale.pdf}
 			\caption{Skew check of Model 4}
 		\end{subfigure}
 		\caption{Histograms of skewness for 4000 draws from the posterior predictive distribution.}\label{fig:skewcheck}
 	\end{figure}
 	
 	
-	LOO CV predictive cumulative density plots are used to visualise the performance of the models. The model is well calibrated when the plots are asymptotically uniform (for continuous data) \parencite{gabry2019Visualization, Gelman2013Bayesian}. Figure \ref{fig:pitloo} compares the density of the computed LOO PIT (the thick dark curve) versus 100 simulated data sets from a standard uniform distribution (the thin light curves). Model 1 and 3 are obviously miscalibrated. Overall, the fit for model 2 is good but the frown shape of the curve indicates a little miscalibration comparing to Model 4. This implies that the model is either misspecified or too flexible. Among all four models model 4 demonstrates the best fit.
+	LOO CV predictive cumulative density plots are used to visualise the performance of the models. The model is well calibrated when the plots are asymptotically uniform (for continuous data) \parencite{gabry2019Visualization, Gelman2013Bayesian}. Figure \ref{fig:pitloo} compares the density of the computed leave one out probability integral transformation (LOO PIT) (the thick dark curve) versus 100 simulated data sets from a standard uniform distribution (the thin light curves). Model 1 and 3 are obviously miscalibrated. Overall, the fit for Model 2 is good but the frown shape of the curve indicates a little miscalibration in comparison to Model 4. This implies that the model is either misspecified or too flexible. A flexible model has a good capability in predicting out-of-sample data. Among all four models Model 4 demonstrates the best fit.
 	
 	\begin{figure}[!htp]
 		\centering
 		\begin{subfigure}[t]{0.45\textwidth}
-			\includegraphics[width=\linewidth]{Images/pit_GSRNS}
+			\includegraphics[width=\linewidth]{Images/pit_GSRNS_scale.pdf}
 			\caption{LOO PIT diagnosis of Model 1}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.45\textwidth}
-			\includegraphics[width=\linewidth]{Images/pit_GSRand}
+			\includegraphics[width=\linewidth]{Images/pit_GSRand_scale.pdf}
 			\caption{LOO PIT diagnosis of Model 2}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.45\textwidth}
-			\includegraphics[width=\linewidth]{Images/pit_STRNS}
+			\includegraphics[width=\linewidth]{Images/pit_STRNS_scale.pdf}
 			\caption{LOO PIT diagnosis of Model 3}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.45\textwidth}
-			\includegraphics[width=\linewidth]{Images/pit_STRand}
+			\includegraphics[width=\linewidth]{Images/pit_STRand_scale.pdf}
 			\caption{LOO PIT diagnosis of Model 4}
 		\end{subfigure}
 		\caption{LOO PIT plots of the four models. }\label{fig:pitloo}
 	\end{figure}
 	
 	
-	Pareto $\hat{k}$ diagnostic value is also important, as is shown in Table \ref{tb:Pareto}. Model 1 has too many large $\hat{k}$ values, which indicates that the model is either misspecified or too flexible. A similar interpretation can be made for model 3 where a few ``bad'' values can be observed. These results should not be interpreted solely but together with LOO PIT and \ploo\ values in Table \ref{tb:LOOR}. If we look at Figure \ref{fig:ppcheck}, it is clear that models 1 and 3 are misspecified. The LOO PIT plots (Figure \ref{fig:pitloo}) confirm the latter, even if there are no ``bad'' $\hat{k}$ values. In the case where high Pareto $\hat{k}$ values are observed but the model fit is good, one can conclude that the model is both misspecified and flexible. The latter indicates that the model has a good capability in predicting unknown data. In this scenario, $K$-fold CV is recommended. 
+	Pareto $\hat{k}$ diagnostic value is also important, as shown in Table \ref{tb:Pareto}. Model 1 has too many large $\hat{k}$ values, which indicates that the model is either misspecified or too flexible. A similar interpretation can be made for Model 3 where a few ``bad'' values can be observed. These results should not be interpreted solely based on the computed $\hat{k}$ values in Table \ref{tb:Pareto}, but we need to take into account the values of LOO PIT and the effective number of parameters \ploo\ in Table \ref{tb:LOOR}. The \ploo\ is calculated by subtracting the \elpd\ from the full $\log$ posterior predictive density. Figure \ref{fig:ppcheck} shows that models 1 and 3 are misspecified. The LOO PIT plots (Figure \ref{fig:pitloo}) also confirm that these two models are misspecified, even though there are no ``very bad'' $\hat{k}$ values. In the case where high Pareto $\hat{k}$ values are observed but the model fit is good, one can conclude that the model is both misspecified and flexible. In this scenario, a $K$-fold CV is recommended instead of LOO CV for some $K \geq 5$. 
 	
-	For model 2, there is six bad and very bad $\hat{k}$ values, which might be high influential points or outliers. Hence, it indicates the potential misspecification by the model. Therefore, instead of using Gaussian distribution, model 4 uses Student-$t$ distribution and all $\hat{k}$ values are less than the threshold  (less than 0.7). Then LOO CV does the balancing of goodness-of-fit and parsimony automatically, and \elpd\ and Bayesian $R^2$ are valid. 
+	For Model 2, there are six ``bad'' and ``very bad'' $\hat{k}$ values, which might be due to highly influential points or outliers. These large $\hat{k}$ values also indicate the potential misspecification of the Gaussian likelihood. Therefore, instead of using Gaussian distribution, Model 4 uses the Student-$t$ distribution. The selection of the Student-$t$ distribution resulted in improvement in all $\hat{k}$ values, as these are estimated to be less than the threshold value of $0.70$. Then the \elpd\ and Bayesian $R^2$ are valid. 
 	
 	\begin{table}[!htp]
 		\centering
@@ -584,9 +595,9 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	
 	\subsection{Model evaluation}
 		
-	We use ELPD, LOO CV scores and Bayesian $R^2$ to evaluate and compare the performance of different models. \ploo\ is the effective number of parameters and is calculated as the subtraction of \elpd\ from the non-cross-validated $\log$ posterior predictive density value. In Bayesian analysis, even if there are no high Pareto $\hat{k}$ values, $R^2$ is not indicative if \ploo\ is relatively high compared to the total number of parameters or the number of observations, which implies weakly predictive capability and probably a model misspecification. 
+	We use \textcolor{red}{\elpd, \ploo, LOO information criterion (looic), which is $-2\times$\elpd\ in deviance scale,} and Bayesian $R^2$ to evaluate and compare the performance of different models. In Bayesian analysis, even if there are no high Pareto $\hat{k}$ values, $R^2$ is not indicative if \ploo\ is relatively high compared to the total number of parameters or the number of observations. A high \ploo\ and looic imply weakly predictive capability and a suspicious model misspecification. 
 		
-	The results for each model are presented in Table \ref{tb:LOOR}. The mean and standard deviation of the posterior distribution, along with the credibility interval (CI) are reported. The equal tail credibility interval at level $\alpha$ is the interval bracketed by the $\alpha/2$ and the $1-\alpha/2$ quantiles of the posterior samples, where $\alpha \in (0,1)$. We chose $\alpha=0.05$, a standard option in frequentist statistics. 	
+	The results for each model are presented in Table \ref{tb:LOOR}. The mean and standard deviation of the posterior distribution, along with the credibility interval (CI) are reported. The equal tail CI at level $\alpha$ is the interval bracketed by the $\alpha/2$ and the $1-\alpha/2$ quantiles of the posterior samples, where $\alpha \in (0,1)$. We chose $\alpha=0.05$, a standard option in frequentist statistics. 	
 	
 	\begin{table}[!htp]
 		\centering
@@ -602,10 +613,10 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 				Bayesian $R^2$   &  0.842   & 0.563$\sim$0.965 &  0.974  & 0.972$\sim$0.977 & 0.190 & 0.135$\sim$0.251 & 0.987 & 0.989$\sim$0.991 \\
 				\bottomrule
 		\end{tabular}}
-		\caption{LOO CV estimates with standard errors and medians of Bayesian $R^2$ credibility intervals.}\label{tb:LOOR}
+		\caption{LOO CV estimates with standard errors and medians of Bayesian $R^2$ with credibility intervals.}\label{tb:LOOR}
 	\end{table}
 		
-	The $R^2$ should not be used solely in the interpretations of the results. For example, even though model 1 has higher $R^2$ values compared to model 3, it also has more terrible high Pareto $\hat{k}$ values and large \ploo\ values, which indicate the misspecification and flexibility. Great flexibility means the model has the power in predicting unknown future data in terms of smaller errors. Therefore, $R^2$ is not indicative for neither model 1 and model 3. The focus should be on models 2 and 4. Apparently, model 4 with Student-$t$ distribution is better than model 2 with Gaussian distribution in terms of smaller LOO CV score and higher $R^2$ value. The ``vary bad'' Pareto $\hat{k}$ value, which indicates a potential outlier, is eliminated by fitting Model 4. 
+	The $R^2$ is valid only when the model is not misspecified. In the results, Model 1 is better than Model 3 in terms of the higher $R^2$ value. But these two models are all misspecified according to high Pareto $\hat{k}$ values and large \ploo\ values. Therefore, $R^2$ is not indicative for neither Model 1 and Model 3. The focus should be on Models 2 and 4. Apparently, Model 4 with Student-$t$ distribution is better than Model 2 with Gaussian distribution in terms of smaller looic and higher $R^2$ value. The bad Pareto $\hat{k}$ values in Model 2 are eliminated by fitting Model 4. 
 	
 	
 	
@@ -615,7 +626,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 		
 	
 	\subsection{Model assessment}
-	Table \ref{tb:resultModel4} presents the summary statistics of the posterior distribution of all parameters from model 4. It should be noted that the means and the medians for all parameters are very close or identical which indicates robust results. Another feature is the magnitude of the values of $\hat{b}_2$ and $\hat{\sigma}_2$, they are very small. The latter indicates a week influence of the quadratic term of the regression. The pattern of coefficients magnitude is well illustrated in Figure \ref{fig:betasprd}.
+	Table \ref{tb:resultModel4} presents the summary statistics of the posterior distribution of all parameters from Model 4. It should be noted that the means and the medians for all parameters are very close or identical which indicates robust results. Another feature is that the magnitude of the values of $\hat{b}_2$ and $\hat{\sigma}_2$ are very small. It indicates a week influence of the quadratic term of the regression. The pattern of coefficients magnitude is well illustrated in Figure \ref{fig:betasprd}.
 	
 	\begin{table}[!htp]\centering
 		\begin{tabular}{ l *{5}{c}} \toprule
@@ -635,11 +646,12 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			$\hat{\rho}_r$   &  0.9274 & 0.0074&  0.9120& 0.9275 & 0.9410  \\
 			$\hat{\nu}$ &  4.1321 & 0.5503 & 3.2098 & 4.0861 & 5.3573  \\
 			\bottomrule
-		\end{tabular}\caption{Summary statistics of the posterior samples from model 4. Mean, standard deviation (SD), credibility interval and median of posterior samples are reported. }\label{tb:resultModel4}
+		\end{tabular}\caption{Summary statistics of the posterior samples from Model 4. Mean, standard deviation (SD), credibility interval and median of posterior samples are reported. }\label{tb:resultModel4}
 	\end{table}         
 	
 	Figure \ref{fig:betasprd} displays the overall coefficients of the fixed and random components on three separate plots, for the intercept $\hat{\bm{\beta}}_0 = \hat{\bm{b}}_0+\tilde{\bm{u}}_0$, the linear term $\hat{\bm{\beta}}_1 = \hat{\bm{b}}_1+\tilde{\bm{u}}_1$ and the quadratic term $\hat{\bm{\beta}}_2 = \hat{\bm{b}}_2+\tilde{\bm{u}}_2$, respectively. The plots cover the whole trial area, as presented in Figure \ref{fig:lasrossayield} and \ref{fig:lasrossatopo}. 
-	The contour maps are aligned with the topology of the area. It can be observed that the Hilltop area and small part of the neighbouring areas on the left and right (see Figure \ref{fig:lasrossatopo}) are exhibiting different pattern in comparison to the other three topological regions, for all of the $\hat{\bm{\beta}}$ coefficients. The linear component coefficient for the Hilltop area is the highest, in the range of 0.02-0.08, while for the other three areas is around -0.01. The latter explains the observed pattern in the contour map.
+	The contour maps are aligned with the topology of the area. It can be observed that the Hilltop area and small part of the neighbouring areas on the left and right (see Figure \ref{fig:lasrossatopo}) are exhibiting different pattern in comparison to the other three topological regions, for all of the $\hat{\bm{\beta}}$ coefficients. The linear component coefficient for the Hilltop area is the highest, in the range of 0.02-0.08, while for the other three areas is around -0.01. %The latter explains the observed pattern in the contour map.
+	The quadratic component coefficient for the Hilltop area is negative, which indicates that an optimal treatment in the area is available. However, in other areas, the coefficients are positive and a linear pattern is sufficient in model fitting. 
 	
 	% Furthermore, in the Hilltop (middle area) and eastern of West slope (left side) areas, the quadratic term $\bm{\beta}_2$ is negative, which means the optimal treatment level exists. 
 	
@@ -770,7 +782,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	\addcontentsline{toc}{section}{Appendices}	
 	\section*{Appendix}
 	
-	\section{Prior predictive checking}
+	\section{Prior predictive checking}\label{App:Prior}
 	
 	\begin{figure}[!htp]
 		\centering
