@@ -230,7 +230,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			1+\frac{1}{\nu}(\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u})^\top\Sigma_e^{-1}(\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u})  \right) -\frac{n}{2}\ln\nu \\ &+ \ln \Gamma(\frac{\nu+n}{2}) - \ln\Gamma(\frac{\nu}{2})-\frac{1}{2}\ln\det \Sigma_e + \ln \pi(\theta),
 		\end{split}
 	\end{equation}
-	where $\nu$ is the degrees of freedom. 
+	where $\nu\geq 1$ is the degrees of freedom. 
 	
 	Assuming $\bm{u}\sim \N(0,\Sigma_u)$, for faster gradient evaluation and sampling we impose Cholesky decomposition, such that 
 	\begin{equation}\label{eq:sigmau}
@@ -468,7 +468,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	
 	
 	
-	In Model 2, in addition to the priors used in Model 1, we need priors for the parameters $\rho_c$ and $\rho_r$, and suppose $\rho_c,\rho_r\sim U(0,1)$, where $U(0,1)$ is the uniform distribution between 0 and 1. In Model 3 and 4, we have an extra parameter $\nu$ for the degrees of freedom, and we specify a Gamma prior $\nu\sim \Gamma(2,0.1)$, as suggested by \textcite{Juarez2010ModelBased}. 
+	In Model 2, in addition to the priors used in Model 1, we need priors for the parameters $\rho_c$ and $\rho_r$, and suppose $\rho_c,\rho_r\sim U(0,1)$, where $U(0,1)$ is the uniform distribution between 0 and 1. In Model 3 and 4, we have an extra parameter $\nu(\geq 1)$ for the degrees of freedom, and we specify a Gamma prior $\nu\sim \Gamma(2,0.1)$, as suggested by \textcite{Juarez2010ModelBased}. 
 	
 	In Table \ref{tb:priors}, we present the complete list of priors selected for our study. In general, it is not recommended to use the same priors across all the different models listed in Table \ref{tb:priors}. Furthermore, if a new prior is proposed for a new parameter, examining the suitability of that prior is recommended for each model. In this study, we have checked the suitability of all the priors for all our four models, and it turns out that the same priors, listed in the top-half of Table~\ref{tb:priors}, work well for all the four models (see Figure~\ref{fig:priorcheck4models} for further details). Consequently, we built the models by using the same weakly informative priors for a number of common parameters, and only adding new priors (listed in the bottom-half of Table~\ref{tb:priors}) for the additional parameters.
 	
@@ -495,13 +495,13 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 		\end{tabular}\caption{Priors of four models. Top-half: priors for common parameters of four models; Bottom-half: new priors for additional parameters.}\label{tb:priors}
 	\end{table}
 	
-	With the above priors, the models were run on four parallel Markov chains in \rstan\ with each chain containing 2000 iterations, where the first 1000 iterations are run in the warm-up phase. The final posterior contains 4000 samples for each parameter. 	
+	Using the above priors, our proposed hierarchical Bayesian models were run on four parallel Markov chains using the \R-package \rstan\ with each chain having a warmup period of 1000 iterations and post-warmup period of another 1000 iterations. Consequently, for each parameter, we generated 4000 samples (1000 samples from each of the four chains) from its posterior distribution. 	
 	
 	\subsection{Posterior checking}\label{ss:PostCheck}
 	
-	The prior predictive checking is a powerful tool for understanding the structure of the model. However, it is not possible to extend this technique to model selection and performance evaluation. We use MCMC diagnostic tools and PP checking for further analyses and comparison. 	
+	The prior predictive checking is a powerful tool for understanding the structure of the model. However, it is not possible to extend this technique to choose between competing models for the data and evaluate their predictive performances. To assess the performance of a fitted model and diagnose potential model misspecifications, it is crucial to include posterior checking in the Bayesian modelling workflow. We use MCMC and PP diagnostic tools as part of our posterior checking. 	
 	
-	We start with the PP checking to visualise the performance of the four models. Figure \ref{fig:ppcheck} displays the results of the PP checking. Appears that if the random parameters are not spatially correlated, Model 1 and 3 are incapable of simulating the data that adequately capture the distribution of the observations. On contrary, Models 2 and 4 show promising results. 	
+	We start with the PP checking to visualise the performance of the four models described in Table~\ref{tb:models}. Figure \ref{fig:ppcheck} displays the results of the PP checking. It appears that if we do not take into account the spatial correlation of parameters $\bm{u}$ (e.g., Model 1 and 3), we are incapable of simulating the data that adequately capture the distribution of the observations. On the contrary, because Models 2 and 4 incorporate spatial correlation into modelling, we see simulation results that closely mimic the observed yield from the Las Rosas experiment. 	
 	
 	\begin{figure}[!htp]
 		\centering
@@ -521,7 +521,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			\includegraphics[width=\linewidth]{Images/ppcheck_STRand}
 			\caption{PP check of Model 4}
 		\end{subfigure}
-		\caption{Posterior predictive checking for simple linear and the proposed spatial models with 100 simulations.}\label{fig:ppcheck}
+		\caption{Posterior predictive checking for simple linear and the proposed spatial models with 100 simulations (blue lines) comparing to the observed data (black line).}\label{fig:ppcheck}
 	\end{figure}
 	
 	
@@ -545,7 +545,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			\includegraphics[width=\linewidth]{Images/skew_STRand_scale.pdf}
 			\caption{Skew check of Model 4}
 		\end{subfigure}
-		\caption{Histograms of skewness for 4000 draws from the posterior predictive distribution.}\label{fig:skewcheck}
+		\caption{Histograms of skewness for 4000 draws (blue) from the posterior predictive distribution comparing to the observed data (black).}\label{fig:skewcheck}
 	\end{figure}
 	
 	
@@ -569,7 +569,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			\includegraphics[width=\linewidth]{Images/pit_STRand_scale.pdf}
 			\caption{LOO PIT diagnosis of Model 4}
 		\end{subfigure}
-		\caption{LOO PIT plots of the four models. }\label{fig:pitloo}
+		\caption{LOO PIT plots of the four models. The thick dark line is the density of the LOO PIT for each candidate model, and the thin lines are simulated data from a standard uniform distribution. }\label{fig:pitloo}
 	\end{figure}
 	
 	
@@ -650,7 +650,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	\end{table}         
 	
 	Figure \ref{fig:betasprd} displays the overall coefficients of the fixed and random components on three separate plots, for the intercept $\hat{\bm{\beta}}_0 = \hat{\bm{b}}_0+\tilde{\bm{u}}_0$, the linear term $\hat{\bm{\beta}}_1 = \hat{\bm{b}}_1+\tilde{\bm{u}}_1$ and the quadratic term $\hat{\bm{\beta}}_2 = \hat{\bm{b}}_2+\tilde{\bm{u}}_2$, respectively. The plots cover the whole trial area, as presented in Figure \ref{fig:lasrossayield} and \ref{fig:lasrossatopo}. 
-	The contour maps are aligned with the topology of the area. It can be observed that the Hilltop area and small part of the neighbouring areas on the left and right (see Figure \ref{fig:lasrossatopo}) are exhibiting different pattern in comparison to the other three topological regions, for all of the $\hat{\bm{\beta}}$ coefficients. The linear component coefficient for the Hilltop area is the highest, in the range of 0.02-0.08, while for the other three areas is around -0.01. %The latter explains the observed pattern in the contour map.
+	The contour maps are aligned with the topology of the area. It can be observed that the Hilltop area and small part of the neighbouring areas on the left and right (see Figure \ref{fig:lasrossatopo}) are exhibiting different pattern in comparison to the other three topological regions, for all of the $\hat{\bm{\beta}}$ coefficients. The linear component coefficient for the Hilltop area is the highest, in the range of 0.02 -- 0.08, while for the other three areas is around -0.01. %The latter explains the observed pattern in the contour map.
 	The quadratic component coefficient for the Hilltop area is negative, which indicates that an optimal treatment in the area is available. However, in other areas, the coefficients are positive and a linear pattern is sufficient in model fitting. 
 	
 	% Furthermore, in the Hilltop (middle area) and eastern of West slope (left side) areas, the quadratic term $\bm{\beta}_2$ is negative, which means the optimal treatment level exists. 
@@ -660,7 +660,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 		\includegraphics[width=\textwidth, height=6cm]{Images/STRand_b0}
 		\includegraphics[width=\textwidth, height=6cm]{Images/STRand_b1}
 		\includegraphics[width=\textwidth, height=6cm]{Images/STRand_b2}
-		\caption{Contour plots of spatial-varying coefficients $\hat{\bm{\beta}}_0$ (top), $\hat{\bm{\beta}}_1$ (middle) and $\hat{\bm{\beta}}_2$ (bottom) for Las Rosas data.  }\label{fig:betasprd}
+		\caption{Contour plots of spatial-varying coefficients $\hat{\bm{\beta}}_0$ (top), $\hat{\bm{\beta}}_1$ (middle) and $\hat{\bm{\beta}}_2$ (bottom) for Las Rosas data. Negative $\hat{\bm{\beta}}_2$ is available in the Hilltop region, where optimal treatments exist. For other regions, linear response is sufficient. }\label{fig:betasprd}
 	\end{figure}
 	
 	The result is consistent with the discovery by \textcite{Rakshit2020Novel} that the quadratic pattern is strong in Hilltop region but weak in other regions. Even though a quadratic pattern is identified in the East slope and Low East, the adjusted-$p$ values indicate non-significant for these areas. 
@@ -802,7 +802,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			\includegraphics[width=\linewidth]{Images/prior_STRand}
 			\caption{Model 4: Student distribution with spatial correlation.}
 		\end{subfigure}
-		\caption{Weakly informative priors checking on four models. }\label{fig:priorcheck4models}
+		\caption{Weakly informative priors checking for four models. }\label{fig:priorcheck4models}
 	\end{figure}
 	
 	
@@ -813,21 +813,21 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 		l_{ij} = \begin{cases}
 			\rho^{j-1} & j\geq i =1 \\
 			\rho^{j-i} \sqrt{1-\rho^2} & j\geq i \geq2
-		\end{cases}
+		\end{cases},
 	\end{equation}
-	The latter significantly improved the computational efficiency in \rstan. 
+	which significantly improved the computational efficiency in \rstan. 
 	
-	\section{Faster Kronecker product}\label{sec:kronec}
+	\section{Fast Kronecker product}\label{sec:kronec}
 	
-	Assume $A=L_A L_A^\top$ and $B=L_B L_B^\top$ are respectively $N\times N$ and $M\times M$ matrices with Cholesky decomposition $L_A$ and $L_B$. One good property of the Kronecker product is that
-	\begin{equation}
-		C=A\otimes B = (L_A L_A^\top)\otimes (L_B L_B^\top) = (L_A\otimes L_B)(L_A \otimes L_B)^\top,
-	\end{equation}
-	where the new matrix $C$ is $NM\times NM$, and the elements of the new matrix are  $c_{p,q}=a_{i,j}b_{k,l}$, where $p=M(i-1)+k$ and $q=M(j-1)+l$. Similarly, the Kronecker product of three matrices, with a $K\times K$ matrix $C$, is
-	\begin{equation}
-		D=A\otimes B\otimes C = (L_A L_A^\top)\otimes (L_B L_B^\top)\otimes (L_C L_C^\top) = (L_A\otimes L_B\otimes L_C) (L_A\otimes  L_B\otimes L_C)^\top,
-	\end{equation}
-	and the new elements are $d_{p,q}=a_{i,j}b_{k,l}c_{m,n}$, where $p=K(M(i-1)+k-1)+m$ and $q=K(M(j-1)+l-1)+n$. 
+% 	Assume $A=L_A L_A^\top$ and $B=L_B L_B^\top$ are respectively $N\times N$ and $M\times M$ matrices with \textcolor{red}{lower triangular factors of} Cholesky decomposition $L_A$ and $L_B$. One good property of the Kronecker product is that
+% 	\begin{equation}
+% 		C=A\otimes B = (L_A L_A^\top)\otimes (L_B L_B^\top) = (L_A\otimes L_B)(L_A \otimes L_B)^\top,
+% 	\end{equation}
+% 	where the new matrix $C$ is $NM\times NM$, and the elements of the new matrix are  $c_{p,q}=a_{i,j}b_{k,l}$, where $p=M(i-1)+k$ and $q=M(j-1)+l$. Similarly, the Kronecker product of three matrices, with a $K\times K$ matrix $C$, is
+% 	\begin{equation}
+% 		D=A\otimes B\otimes C = (L_A L_A^\top)\otimes (L_B L_B^\top)\otimes (L_C L_C^\top) = (L_A\otimes L_B\otimes L_C) (L_A\otimes  L_B\otimes L_C)^\top,
+% 	\end{equation}
+% 	and the new elements are $d_{p,q}=a_{i,j}b_{k,l}c_{m,n}$, where $p=K(M(i-1)+k-1)+m$ and $q=K(M(j-1)+l-1)+n$. 
 	
 	
 	Let $A=[a_1,a_2,\ldots,a_n]\in \mathbb{R}^{m\times n}$, where $a_j\in\mathbb{R}^m, j=1,2,\ldots,n$. Then the vector $\mbox{vec}(A)$ is defined as 
