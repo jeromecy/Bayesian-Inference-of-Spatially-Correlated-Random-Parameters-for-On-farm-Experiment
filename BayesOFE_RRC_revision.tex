@@ -501,7 +501,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	
 	The prior predictive checking is a powerful tool for understanding the structure of the model. However, it is not possible to extend this technique to choose between competing models for the data and evaluate their predictive performances. To assess the performance of a fitted model and diagnose potential model misspecifications, it is crucial to include posterior checking in the Bayesian modelling workflow. We use MCMC and PP diagnostic tools as part of our posterior checking. 	
 	
-	We start with the PP checking to visualise the performance of the four models described in Table~\ref{tb:models}. Figure \ref{fig:ppcheck} displays the results of the PP checking. It appears that if we do not take into account the spatial correlation of parameters $\bm{u}$ (e.g., Model 1 and 3), we are incapable of simulating the data that adequately capture the distribution of the observations. On the contrary, because Models 2 and 4 incorporate spatial correlation into modelling, we see simulation results that closely mimic the observed yield from the Las Rosas experiment. 	
+	We start with the PP checking to visualise the performance of the four models described in Table~\ref{tb:models}. Figure \ref{fig:ppcheck} displays the results of the PP checking. It appears that, if we do not take into account the spatial correlation of parameters $\bm{u}$, we are incapable of simulating the data that adequately capture the distribution of the observations (see plots of models 1 and 3 in Figure~\ref{fig:ppcheck}). On the contrary, because models 2 and 4 incorporate spatial correlation, simulations from these models closely mimic the distribution of observed yield from the Las Rosas experiment. 	
 	
 	\begin{figure}[!htp]
 		\centering
@@ -525,7 +525,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	\end{figure}
 	
 	
-	Figure \ref{fig:skewcheck} illustrates the observed skewness of the posterior predictive distribution for the four models. While Model 2 and 4 capture the observed skewness, Model 1 and 3 demonstrate model misspecification. 
+	Figure \ref{fig:skewcheck} illustrates the observed skewness of the posterior predictive distribution for the four models. While models 2 and 4 capture the skewness of the observed corn yield, the plots of models 1 and 3 indicate that these models may be misspecified. See \textcite[p.~397]{gabry2019Visualization} for more details on the use of such skewness plots for model selection in a Bayesian workflow.
 	
 	\begin{figure}[!htp]
 		\centering
@@ -549,7 +549,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	\end{figure}
 	
 	
-	LOO CV predictive cumulative density plots are used to visualise the performance of the models. The model is well calibrated when the plots are asymptotically uniform (for continuous data) \parencite{gabry2019Visualization, Gelman2013Bayesian}. Figure \ref{fig:pitloo} compares the density of the computed leave one out probability integral transformation (LOO PIT) (the thick dark curve) versus 100 simulated data sets from a standard uniform distribution (the thin light curves). Model 1 and 3 are obviously miscalibrated. Overall, the fit for Model 2 is good but the frown shape of the curve indicates a little miscalibration in comparison to Model 4. This implies that the model is either misspecified or too flexible. A flexible model has a good capability in predicting out-of-sample data. Among all four models Model 4 demonstrates the best fit.
+	LOO CV predictive cumulative density plots can also be used to assess the performance of fitted models. A model is well calibrated for continuous responses when the corresponding plot shows asymptotically uniform behaviour \parencite{gabry2019Visualization, Gelman2013Bayesian}. Figure \ref{fig:pitloo} compares the density of the computed \emph{leave one out probability integral transformation} (LOO PIT) (the thick dark curve) with the 100 simulated data sets from a standard uniform distribution (the thin light curves). It is evident from Figure \ref{fig:pitloo} that Model 1 and 3 are miscalibrated. Although the Model 2 fit seems good, the frown shape of the curve indicates inferior calibration than Model 4. This implies that Model 2 is either misspecified or too flexible. A flexible model often has the capability of predicting successfully out-of-sample data. However, amongst the four fitted models, Model 4 demonstrates the best fit for the Las Rosas data set.
 	
 	\begin{figure}[!htp]
 		\centering
@@ -573,7 +573,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	\end{figure}
 	
 	
-	Pareto $\hat{k}$ diagnostic value is also important, as shown in Table \ref{tb:Pareto}. Model 1 has too many large $\hat{k}$ values, which indicates that the model is either misspecified or too flexible. A similar interpretation can be made for Model 3 where a few ``bad'' values can be observed. These results should not be interpreted solely based on the computed $\hat{k}$ values in Table \ref{tb:Pareto}, but we need to take into account the values of LOO PIT and the effective number of parameters \ploo\ in Table \ref{tb:LOOR}. The \ploo\ is calculated by subtracting the \elpd\ from the full $\log$ posterior predictive density. Figure \ref{fig:ppcheck} shows that models 1 and 3 are misspecified. The LOO PIT plots (Figure \ref{fig:pitloo}) also confirm that these two models are misspecified, even though there are no ``very bad'' $\hat{k}$ values. In the case where high Pareto $\hat{k}$ values are observed but the model fit is good, one can conclude that the model is both misspecified and flexible. In this scenario, a $K$-fold CV is recommended instead of LOO CV for some $K \geq 5$. 
+	Pareto $\hat{k}$ diagnostic value is also important, as shown in Table \ref{tb:Pareto}. Model 1 has too many large $\hat{k}$ values, which indicates that the model is either misspecified or too flexible. A similar interpretation can be made for Model 3 where a few ``bad'' values can be observed. These results should not be interpreted solely based on the computed $\hat{k}$ values in Table \ref{tb:Pareto}, but we need to take into account the values of LOO PIT and the effective number of parameters \ploo\ in Table \ref{tb:LOOR}. The \ploo\ is calculated by subtracting the \elpd\ from the full $\log$ posterior predictive density. Figure \ref{fig:ppcheck} shows that Model 1 and 3 are misspecified. The LOO PIT plots (Figure \ref{fig:pitloo}) also confirm that these two models are misspecified, even though there are no ``very bad'' $\hat{k}$ values. In the case where high Pareto $\hat{k}$ values are observed but the model fit is good, one can conclude that the model is both misspecified and flexible. In this scenario, a $K$-fold CV is recommended instead of LOO CV for some $K \geq 5$. 
 	
 	For Model 2, there are six ``bad'' and ``very bad'' $\hat{k}$ values, which might be due to highly influential points or outliers. These large $\hat{k}$ values also indicate the potential misspecification of the Gaussian likelihood. Therefore, instead of using Gaussian distribution, Model 4 uses the Student-$t$ distribution. The selection of the Student-$t$ distribution resulted in improvement in all $\hat{k}$ values, as these are estimated to be less than the threshold value of $0.70$. Then the \elpd\ and Bayesian $R^2$ are valid. 
 	
@@ -595,9 +595,9 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	
 	\subsection{Model evaluation}
 		
-	We use \textcolor{red}{\elpd, \ploo, LOO information criterion (looic), which is $-2\times$\elpd\ in deviance scale,} and Bayesian $R^2$ to evaluate and compare the performance of different models. In Bayesian analysis, even if there are no high Pareto $\hat{k}$ values, $R^2$ is not indicative if \ploo\ is relatively high compared to the total number of parameters or the number of observations. A high \ploo\ and looic imply weakly predictive capability and a suspicious model misspecification. 
+	We use \textcolor{red}{\elpd, \ploo, LOO information criterion (looic), which is $-2\times$\elpd\ in deviance scale,} and Bayesian $R^2$ to evaluate and compare the performance of different models. In Bayesian analysis, even if there are no high Pareto $\hat{k}$ values, $R^2$ is not indicative if \ploo\ is relatively high compared to the total number of parameters or the number of observations. High \ploo\ and looic values imply weak predictive capability and potential model misspecification. 
 		
-	The results for each model are presented in Table \ref{tb:LOOR}. The mean and standard deviation of the posterior distribution, along with the credibility interval (CI) are reported. The equal tail CI at level $\alpha$ is the interval bracketed by the $\alpha/2$ and the $1-\alpha/2$ quantiles of the posterior samples, where $\alpha \in (0,1)$. We chose $\alpha=0.05$, a standard option in frequentist statistics. 	
+	The results for each of our four fitted models are presented in Table \ref{tb:LOOR}. The mean and standard deviation of the posterior distribution, along with the $95\%$ credibility interval (CI) are reported. The lower and upper limits of the CI are given by the $2.5\%$ and $97.5\%$ quantiles of the posterior samples, respectively.	
 	
 	\begin{table}[!htp]
 		\centering
@@ -610,19 +610,19 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 				looic     &  14472.5  & 26.7 & 9890.4 & 269.6 &  15696.8 & 34.3 & 9468.7 & 76.7\\		
 				\midrule
 				&  Median & CI &   Median & CI &   Median & CI &   Median & CI   \\ 
-				Bayesian $R^2$   &  0.842   & 0.563$\sim$0.965 &  0.974  & 0.972$\sim$0.977 & 0.190 & 0.135$\sim$0.251 & 0.987 & 0.989$\sim$0.991 \\
+				Bayesian $R^2$   &  0.842   & 0.563$\sim$0.965 &  0.974  & 0.972$\sim$0.977 & 0.190 & 0.135$\sim$0.251 & 0.989 & 0.987$\sim$0.991 \\
 				\bottomrule
 		\end{tabular}}
-		\caption{LOO CV estimates with standard errors and medians of Bayesian $R^2$ with credibility intervals.}\label{tb:LOOR}
+		\caption{LOO CV estimates with standard errors, medians of Bayesian $R^2$, and $95\%$ credibility intervals.}\label{tb:LOOR}
 	\end{table}
 		
-	The $R^2$ is valid only when the model is not misspecified. In the results, Model 1 is better than Model 3 in terms of the higher $R^2$ value. But these two models are all misspecified according to high Pareto $\hat{k}$ values and large \ploo\ values. Therefore, $R^2$ is not indicative for neither Model 1 and Model 3. The focus should be on Models 2 and 4. Apparently, Model 4 with Student-$t$ distribution is better than Model 2 with Gaussian distribution in terms of smaller looic and higher $R^2$ value. The bad Pareto $\hat{k}$ values in Model 2 are eliminated by fitting Model 4. 
+	The $R^2$ is valid only when the model is not misspecified. Table~\ref{tb:LOOR} shows that Model 1 is a better fit than Model 3 in terms of the $R^2$ value. But these two models are misspecified, as evidenced by their high Pareto $\hat{k}$ values and large \ploo\ values. Therefore, we shall only focus on Model 2 and 4. Model 4 with Student-$t$ distribution is better than Model 2 with Gaussian distribution in terms of smaller looic and higher $R^2$ value. The bad Pareto $\hat{k}$ values in Model 2 are eliminated by fitting Model 4. Therefore, we use Model 4 to fit the Las Rosas data, and the results are presented in the section below. 
 	
 	
 	
 	\section{Results}\label{sec:results}
 	
-	In the previous section, through model selection and evaluation process, we found that Model 4 fits the data best. It proves the capability of spatially correlated random parameters in capturing the spatial variation. With the Bayesian inference of all parameters and model \eqref{eq:prediction}, we are able to obtain a smooth map showing the optimal level of the treatment across a grid made by rows and columns covering the whole field, and hence the estimated yield map. 
+	In the previous section, through model selection and evaluation process, we concluded that Model 4 is the best fit for our example data set. It shows the capability of spatially correlated random parameters in capturing the spatial variation. Using the posterior distribution of the model parameters, we are able to produce the spatially-varying maps of the regression coefficients and subsequently, obtain a smooth map of optimal treatment levels across the whole field. We have also produced the estimated yield map for spatially-varying optimal nitrogen rates. 
 		
 	
 	\subsection{Model assessment}
@@ -632,7 +632,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 		\begin{tabular}{ l *{5}{c}} \toprule
 			\multirow{2}{*}[-2pt]{Parameter}  &  \multirow{2}{*}[-2pt]{Mean}   & \multirow{2}{*}[-2pt]{SD}  &   \multicolumn{3}{c}{Credibility interval}  \\  \cmidrule{4-6} 
 			&     &    &    2.5\%   &       Median  &      97.5\% \\ \midrule 
-			$\hat{b}_0$   &  80.7214 &  3.0461 & 74.9528 & 80.7003& 86.7650    \\
+			$\hat{b}_0$   &  78.7361  & 3.0680  & 72.8282  & 78.6723  & 84.8108\\
 			$\hat{b}_1$   &  0.0126 &   0.0091 &  -0.0049 &   0.0127 &  0.0303 \\
 			$\hat{b}_2(\times 10^{4})$   & 1.9850 & 1.0945 & -1.3057 & 1.9776   &4.1425  \\
 			$\hat{\sigma}_0$&  9.1322 & 0.3902  & 8.4027  & 9.1271  & 9.9447   \\
@@ -646,10 +646,10 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			$\hat{\rho}_r$   &  0.9274 & 0.0074&  0.9120& 0.9275 & 0.9410  \\
 			$\hat{\nu}$ &  4.1321 & 0.5503 & 3.2098 & 4.0861 & 5.3573  \\
 			\bottomrule
-		\end{tabular}\caption{Summary statistics of the posterior samples from Model 4. Mean, standard deviation (SD), credibility interval and median of posterior samples are reported. }\label{tb:resultModel4}
+		\end{tabular}\caption{Summary statistics of the posterior samples from Model 4. Mean, standard deviation (SD), $95\%$ credibility interval (showing $2.5\%$ and $97.5\%$ sample quantiles) and median of posterior samples are reported. }\label{tb:resultModel4}
 	\end{table}         
 	
-	Figure \ref{fig:betasprd} displays the overall coefficients of the fixed and random components on three separate plots, for the intercept $\hat{\bm{\beta}}_0 = \hat{\bm{b}}_0+\tilde{\bm{u}}_0$, the linear term $\hat{\bm{\beta}}_1 = \hat{\bm{b}}_1+\tilde{\bm{u}}_1$ and the quadratic term $\hat{\bm{\beta}}_2 = \hat{\bm{b}}_2+\tilde{\bm{u}}_2$, respectively. The plots cover the whole trial area, as presented in Figure \ref{fig:lasrossayield} and \ref{fig:lasrossatopo}. 
+	Figure \ref{fig:betasprd} displays the maps of the spatially-varying regression coefficients, estimated using Model 4. The top, middle, and bottom panels of Figure \ref{fig:betasprd} show the intercept $\hat{\bm{\beta}}_0 = \hat{\bm{b}}_0+\tilde{\bm{u}}_0$, the linear term $\hat{\bm{\beta}}_1 = \hat{\bm{b}}_1+\tilde{\bm{u}}_1$ and the quadratic term $\hat{\bm{\beta}}_2 = \hat{\bm{b}}_2+\tilde{\bm{u}}_2$, respectively. The plots cover the whole trial area, as presented in Figure \ref{fig:lasrossayield} and \ref{fig:lasrossatopo}. 
 	The contour maps are aligned with the topology of the area. It can be observed that the Hilltop area and small part of the neighbouring areas on the left and right (see Figure \ref{fig:lasrossatopo}) are exhibiting different pattern in comparison to the other three topological regions, for all of the $\hat{\bm{\beta}}$ coefficients. The linear component coefficient for the Hilltop area is the highest, in the range of 0.02 -- 0.08, while for the other three areas is around -0.01. %The latter explains the observed pattern in the contour map.
 	The quadratic component coefficient for the Hilltop area is negative, which indicates that an optimal treatment in the area is available. However, in other areas, the coefficients are positive and a linear pattern is sufficient in model fitting. 
 	
@@ -675,13 +675,13 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 %		\caption{Predicted yield with medium nitrogen rate of 75.4 kg/ha across the field.}\label{fig:yieldprd}
 %	\end{figure}
 		
-	With the assumption that yield is quadratic response of nitrogen rate, hence, optimal nitrogen rate for each grid is available from the model. However, if the optimum rate exceeds the maximum, the maximum is chose. Statistically, $\hat{N}_i = \min\{ \tilde{N}_i, N_{\mbox{max}}\}$ for $i=1,\ldots,n$. Figure \ref{fig:optN} depicts the map of optimal treatment and estimated yield with the optimal treatment on the field. % Most of the area on the field can be applied the maximal nitrogen rate, except the West slope and Hilltop regions that lower rates should be applied. 
+	Because we have fitted a quadratic response of yield to nitrogen rates, we can compute the optimal nitrogen rate $\tilde{N}_{i}$ for the $i$th grid point using $\tilde{N}_{i} = -\hat{\beta}_{1}/(2\hat{\beta}_{2})$, $i=1,\ldots,n$. However, if the optimum rate exceeds the maximum rate $N_{\mbox{max}} = 124.6$ kg/ha used in the trial, the maximum rate has been chosen as the optimal rate. Therefore, we can compute the adjusted optimal rate $\hat{N}_i = \min\{ \tilde{N}_i, N_{\mbox{max}}\}$ for $i=1,\ldots,n$. Figure \ref{fig:optN} depicts the map of the adjusted optimal treatment and estimated yield corresponding to the spatially-varying adjusted optimal treatment rates across the field. % Most of the area on the field can be applied the maximal nitrogen rate, except the West slope and Hilltop regions that lower rates should be applied. 
 		
 	\begin{figure}[!htp]
 		\centering	
 		\includegraphics[width=\textwidth]{Images/ST_opNitrogen_v2}
 		\includegraphics[width=\textwidth]{Images/ST_opYield}
-		\caption{Optimal nitrogen rates (top) and estimated yield with the optimal rates (bottom).}\label{fig:optN}
+		\caption{\textit{Top}: adjusted optimal nitrogen rates ($\hat{N}$); \textit{Bottom}: estimated yield corresponding to the adjusted optimal rates.}\label{fig:optN}
 	\end{figure}	
 	
 % 	After the optimal nitrogen applied on the field, the estimated product is improved comparing to the current yield. Figure \ref{fig:stdiff} illustrates the different yield of the two management strategies. The difference is positive and indicates improvement on yield product. 	
@@ -693,22 +693,25 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 % 		\caption{Yield difference of current yield and estimated values with optimal nitrogen.}\label{fig:stdiff}
 % 	\end{figure}
 
-	After the optimal nitrogen applied on the field, the estimated product is improved comparing to the yield with current strategy. Figure \ref{fig:stdiff} illustrates the different yield of the two management strategies. The difference is positive and indicates improvement on yield product. 	
+ Figure \ref{fig:stdiff} shows the difference between the predicted yield for the adjusted optimal treatments and the observed yield. As expected, the difference is positive, indicating a higher yield prediction under the optimal nitrogen treatment. 	
 	
 	\begin{figure}[!htp]
 		\centering	
 		\includegraphics[width=\textwidth]{Images/ST_DiffYield}
-		\caption{Yield difference of estimated values with optimal nitrogen and with current nitrogen rate.}\label{fig:stdiff}
+		\caption{Yield difference computed between predicted yield with optimal nitrogen and observed yield.}\label{fig:stdiff}
 	\end{figure}
 	
 	
 	\subsection{Comparing to the GWR approach}\label{sec:comparegwr}
 	
-	\textcite{Rakshit2020Novel} suggested using geographic weighted regression (GWR) techniques to address the same objective and illustrated the use of a geographic weighted local regression to estimate the optimal nitrogen rate for each plot and to predict the yield for the Las Rosas data set. The Bayesian approach discussed here uses the Bayes theorem, NUTS sampler and Bayesian inference to explore the posterior distribution and the parameters' estimates for each plot. 
+	\textcite{Rakshit2020Novel} suggested a GWR based analysis for the same problem considered in this paper, and estimated the spatially-varying coefficients by maximising the local loglikelihoods. GWR is also used to estimate the optimal nitrogen rate for each grid and to predict the yield for the Las Rosas data set. 
 	
-	The two different approaches aim at the same objective, to providing reliable yield estimates and easy interpretation through visual contour plots, assisting plant growers. Both approaches have their advantages. 
 	
-	For GWR, the reliability of the results relies on the bandwidth of the moving window. The optimal bandwidth is selected by cross validation. All data points within the window are used for inferring the information of the plot of interest. Other data points, which are out of the window, contribute nothing to the targeted plot. Due to this feature, the data on the boundary of the field are trimmed off, which means the yield and treatment on the boundary are not estimated. GWR has ``higher resolution'' such that the optimal treatments at pairwise plots are distinguishable, even though the adjusted-$p$ values are large. On contrary, the proposed model with a Bayesian approach uses all data with the spatial variance matrix on the entire field to estimate the query plot. The nearer plots contribute more and further plots contribute less to the inference. So it has ``lower resolution'', as it can be seen from Figure \ref{fig:optN} the difference of optimal nitrogen rates in the West and East areas are not significant. Additionally, the reliability of the Bayesian approach is affected by the priors and the model itself, whereas the influence of the prior \textcolor{red}{reduces if the amount of data increases}. Moreover, GWR is an ad hoc approach for addressing a particular question. The Bayesian approach has more flexibility to be extended and to be broadly applied to other questions. 
+% 	The Bayesian approach proposed in this paper uses the posterior distribution of the model parameters to estimate the spatially-varying treatment effects. 
+	
+% 	Both approaches aim at the same objective, to providing reliable yield estimates and easy interpretation through visual contour plots, assisting plant growers. Both approaches have their advantages. 
+	
+	In GWR, the results crucially depends on the bandwidth of the selected kernel function. Although an appropriate bandwidth can be selected using spatial cross validation, it is computationally challenging for large data sets. To estimate the regression parameters for a query location, the neighbouring observations are given more weight than the distant ones in GWR. On the contrary, the proposed Bayesian approach uses all data in one go to produce estimates for all grid point, based on a spatial variance matrix defined for the entire field. The Bayesian inference is affected by the choice of priors and the likelihood. However, the influence of the prior \textcolor{red}{reduces if the amount of data increases}. The Bayesian approach in general is more flexible than GWR, as it can be easily extended and applied broadly to other applications. 
 	
 	
 	A comparison of these two approaches is summarised in Table \ref{tb:compareGWR}. 
@@ -718,8 +721,7 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 			& GWR & Bayesian \\ \midrule
 			Inference	& with neighbouring data & with all data \\ 	 
 			Initialisation	& bandwidth selection &  prior specification \\ 	
-			Objective	& local log-likelihood & global log-likelihood \\ 
-			Distinguishability & high & low \\ \midrule
+			Objective	& local log-likelihood & global log-likelihood \\  \midrule
 			Evaluation	&  $t$ scores and $p$-values & credible intervals \\
 			&  & PP check and LOO PIT \\
 			&  & Pareto $k$ diagnosis \\
@@ -732,38 +734,39 @@ The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inf
 	
 	\section{Discussion}
 	
-	In this paper, we demonstrates a Bayesian hierarchical model for the analysis of spatially varying treatment effects in on-farm experiments. We explain the mechanism of a Bayesian approach and the NUTS sampler, which has been proved the ability in sampling highly correlated high-dimensional distributions. NUTS exhibits excellent sampling qualities in terms of generating large effective sample sizes, producing low autocorrelation and obtaining low skewness of marginal posterior distributions \parencite{Nishio2019Performance}. Moreover, NUTS does not require conjugate priors, exhibits faster convergence for multi-parameters and has considerable flexibility for fitting user-specified models by researchers using the \R-package \rstan. However, if the data set is large, computing the inverse of the covariance matrix, which is three times the size of the data, is extremely time consuming by conventional algorithm. Therefore, we implement a faster algorithm for calculating the autocorrelation matrix and develop a faster algorithm for computing the Kronecker product of three matrices. The theory of the algorithms, which can be implemented in \rstan, is presented in the Appendix. 
+	In this paper, we developed a Bayesian hierarchical model for estimating spatially-varying treatment effects in on-farm experiments. It is crucial in Bayesian inference to be able to sample from posterior distributions. In order to analyse the Las Rosas data set, we have used the NUTS sampler to sample from highly correlated high-dimensional posterior distributions. NUTS exhibits excellent sampling qualities in terms of generating large effective sample sizes, producing low autocorrelation, and obtaining low skewness of marginal posterior distributions \parencite{Nishio2019Performance}. Moreover, NUTS does not require conjugate priors, exhibits faster convergence for multi-parameters and has considerable flexibility for fitting user-specified models by researchers using the \R-package \rstan. However, if the data set is large, computing the inverse of the covariance matrix, which is three times the size of the data, is extremely time consuming by conventional algorithm. Therefore, we implement a faster algorithm for calculating the autocorrelation matrix and develop a faster algorithm for computing the Kronecker product of three matrices. The details of these algorithms are presented in the Appendix. 
 	
 	
-	The \Matern class covariance 
-	\begin{equation}\label{eq:matcov}
-		V_s(d) = \sigma^2 \frac{2^{1-\nu}}{\Gamma(\nu)} \left( \sqrt{2\nu} \frac{d}{r}\right)^\nu K_\nu\left( \sqrt{2\nu} \frac{d}{r}\right),
-	\end{equation}
-	which is used in spatial analysis \parencite{Cressie1999Classes} and in capturing spatial variation in OFE \parencite{Selle2019Flexible}, can be incorporated in the model as well. %Here, $d$ is the space lag or distance, $r$ is a non-negative scaling parameter, $\nu> 0$ is a smoothness parameter determining the mean-square differentiability of the field, $\sigma_d^2$ is the variance of the process, $\Gamma$ is the Gamma function and $K_\nu$ is the modified Bessel function of the second kind. If $\nu = r + \frac{1}{2}$, then the \Matern covariance can be expressed as a product of an exponential and a polynomial of order $r$. 
-	However, the difficulty in implementing the \Matern covariance is the huge amount of time in calculating the inverse of the covariance matrix for thousands of times when the data size is large. As a compromise, we have to either wait for a few days to obtain converged MCMC chains or reduce the effective sample size and terminate the sampling process earlier, which takes the risk of achieving non-converged chains and leaving parts of the space unexplored. In fact, the difference of $\AR\otimes\AR$ and \Matern covariance matrices is not significant, shown in \parencite{Selle2019Flexible}. Practically, $\AR\otimes\AR$ covariance is a satisfying choice for both efficiency and accuracy. 
+% 	The \Matern class covariance 
+% 	\begin{equation}\label{eq:matcov}
+% 		V_s(d) = \sigma^2 \frac{2^{1-\nu}}{\Gamma(\nu)} \left( \sqrt{2\nu} \frac{d}{r}\right)^\nu K_\nu\left( \sqrt{2\nu} \frac{d}{r}\right),
+% 	\end{equation}
 	
-	
-	
-	The model checking and diagnostic process for post-sampling were presented as well. The Gaussian assumption of the model for the Las Rosas data is misspecified even though the Bayesian $R^2$ value is relatively high. Alternatively, with the help of the diagnostic tools, we discover that Student-$t$ distribution provides a more robust inference. The Bayesian $R^2$ is misleading in some situations, and should not be interpreted solely. 
+	Other covariance structures, including the \Matern class of covariance functions \parencite{Cressie1999Classes}, also can be used for capturing spatial variation in OFE \parencite{Selle2019Flexible}. The \Matern covariance structure can be incorporated in our Bayesian modelling framework. %Here, $d$ is the space lag or distance, $r$ is a non-negative scaling parameter, $\nu> 0$ is a smoothness parameter determining the mean-square differentiability of the field, $\sigma_d^2$ is the variance of the process, $\Gamma$ is the Gamma function and $K_\nu$ is the modified Bessel function of the second kind. If $\nu = r + \frac{1}{2}$, then the \Matern covariance can be expressed as a product of an exponential and a polynomial of order $r$. 
+	However, the main drawback of implementing the \Matern covariance is that it takes a large amount of time to calculate the inverse of the covariance matrix when the data size is large. For implementing the \Matern covariance function, we have to either wait for a long time to obtain converged MCMC chains or reduce the effective sample size and terminate the sampling process earlier, which increases the risk of obtaining non-converged chains and leaving parts of the posterior space unexplored. In practice, however, the difference between the results due to $\AR\times\AR$ and due to \Matern covariance is not significant, as shown in \parencite{Selle2019Flexible}. For most gridded OFE data sets, the $\AR\times\AR$ covariance structure is a reasonable choice in terms of both efficiency and accuracy. 
 	
 	
 	
-	Finally, in Section \ref{sec:comparegwr}, we compare with GWR approach. The proposed Bayesian approach does not require bandwidth selection, but requires pre-specified priors. The results from the Bayesian approach are similar to the ones from GWR and the approach is able to capture more detailed information for the field. Additionally, the GWR trims off the edges of the data on the field due to the fact that it requires the neighbouring data to interpolate the query grid with local log-likelihood. On the contrary, the Bayesian approach uses all data to obtain a smooth map. 
+	The model checking and diagnostic process for post-sampling were presented as well. Conventionally, one may only check the divergence of MCMC chains and insufficiently diagnose the model and its assumption. Hence, the potential model misspecification is not detected. Besides, some researchers use Bayesian $R^2$ as the index in model comparison. However, The Bayesian $R^2$ is misleading in some situations, and it should not be interpreted solely, such as the example in the paper. The Gaussian assumption of the model for the Las Rosas data is misspecified even though the Bayesian $R^2$ value is relatively high. Therefore, other than checking the behaviour of MCMC chains, candidate models should be diagnosed with advance diagnostic tools, such as PP check, LOO CV, Pareto $k$, etc, in the first place. With the help of these diagnostic tools, we discover that Student-$t$ distribution provides a more robust inference. 
 	
 	
+	
+	Finally, in Section \ref{sec:comparegwr}, we explained the difference between our proposed Bayesian approach and the GWR method. However, the results from the Bayesian approach are very similar to those from GWR, reported in \textcite{Rakshit2020Novel}. Another potential method of analysis is based on the residual maximum likelihood (REML). The estimation of regression coefficients under the REML framework would require the development of a computing algorithm that would take into account the spatial correlation of the random effects while computing the best linear unbiased predictors of the treatment effects.
+	
+% 	Both the proposed Bayesian and GWR approaches can only fit regular-shaped data set. If zig-zag pattern appear on the edge of the field, or the data are collected in irregular-space, a further investigation should be carried out. 
 	
 	\section{Conclusion}
 	
 	The novelty of our work can be summarised as follows:
 	\begin{itemize}
-		\item Adapts a Bayesian hierarchical model to large on-farm strip trials.
-		\item The model consists of a global term and a spatially correlated random term.
-		\item The Bayesian inference of all parameters is estimated by faster Kronecker product computing algorithms in \rstan.
-		\item Advanced diagnostic tools spot out potential model misspecification. 
-		\item Compared with GWR, each approach shows its advantage. 
+		\item A Bayesian hierarchical model is adopted to analyse large on-farm strip trials.
+		\item Spatial variation is accounted for by   incorporating spatially correlated random terms in the model.
+		\item The posterior samples of all parameters were obtained by utilising faster Kronecker product computing algorithms in \rstan.
+		\item Advanced diagnostic tools were used to guard against the crucial problem of model misspecification.
+		\item The real-life OFE data set from Las Rosas, Argentina, was analysed to obtain the spatially-varying optimum nitrogen rates for maximising corn yield across the entire field.
 	\end{itemize}
 	
-	Both the proposed Bayesian and GWR approaches can only fit regular-shaped data set. If zig-zag pattern appear on the edge of the field, or the data are collected in irregular-space, a further investigation should be carried out. 
+	
 	
 	
 	
