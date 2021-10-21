@@ -46,7 +46,7 @@
 
 
 \title{Response to Reviewers' Comments \\ 
-\large on the paper \\ Bayesian Inference of Spatially Correlated Random Parameters for On-farm Experiment}
+\large on the paper Manuscript Number: FIELD-D-21-01010 \\ Bayesian Inference of Spatially Correlated Random Parameters for On-farm Experiment}
 
 
 \author[1]{Zhanglong Cao}
@@ -65,7 +65,7 @@
 
 We are all grateful to the reviewers and editors for their time and efforts on our manuscript. The comments from the reviewers are indeed will make the manuscript better in terms of accurate description and easy understanding. 
 
-We have addressed the comments and amended the manuscript accordingly. 
+We have addressed the comments and amended the manuscript accordingly. The amendments in the manuscript to address the reviewers' comments are \textcolor{red}{highlighted in red colour}. We also polished the manuscript to make it clear to read. 
 
 
 \section*{Reviewer 1}
@@ -76,6 +76,8 @@ I applaud the authors for implementing this model, which is a major step forward
 
 \begin{enumerate}
     \item \qtitle{Why did they not simply use a REML package to fit the model? If there are any major obstacles, these should be discussed, as many users would use REML as a default approach.}
+    
+    In Line 489 in the Discussion section, we added ``\textcolor{red}{Another potential method of analysis is based on the residual maximum likelihood (REML). The estimation of regression coefficients under the REML framework would require the development of a computing algorithm that would take into account the spatial correlation of the random effects while computing the best linear unbiased predictors of the treatment effects. }''
     
     The use of the REML package is discussed in our \textit{Random Coefficient Regression} (RCR) paper, which is in preparation. To implement the model in the REML package, such as \asreml, we split the process into two phases: in phase 1, we estimated the correlation parameters $\rho_c$ and $\rho_r$ of $\AR\otimes\AR$ through a two-dimensional grid search; in phase 2, the final model is estimated with the correlation parameters found in phase 1. The entire process is prolonged compared to the Bayesian model in our paper. Additionally, for Bayesian approach, all parameters are estimated at the same time by the NUTS sampler rather than in two separate phases by REML. We compare and discuss the two approaches in the RCR paper. 
     
@@ -93,9 +95,9 @@ I applaud the authors for implementing this model, which is a major step forward
     
     For the term $Zu$ in equation (1), we have explained what they are in Line 114. 
     
-    For the terms $z$ and $u$ in equation (6), we have explained what they are in Line 136. 
+    For the terms $z$ and $u$ in equation (5), we have explained what they are in Line 145. 
     
-    For the term $z_u$ in equation (18), we have explained in Line 197. 
+    For the term $z_u$ in equation (17), we have explained in Line 220. 
     
     \item (4) \qtitle{The Bayesian $R^2$ in eq. (27) does not account for spatial covariance. It uses just the marginal variance. This seems inappropriate for the data at hand, which are spatially correlated, a feature that is, in fact, central to the whole modelling approach. In linear mixed models in general, and in a spatial context in particular, there are pairwise correlations among observations. A natural way to account for this is the semivariance and averaging this across all pairs of observations, or integrating across the random field, naturally leads to an $R^2$ that does account for correlation. See Piepho, H.P. (2019): A coefficient of determination ($R^2$) for generalized linear mixed models. Biometrical Journal 61, 860-872.}
         
@@ -113,9 +115,9 @@ I applaud the authors for implementing this model, which is a major step forward
     
     \item \qtitle{The field layout of the treatment design should be shown. Were treatments randomized within complete reps? How many observations were there per plot? What were the six treatment levels? This is absolutely key information, without which it is impossible to judge the results of the analysis. For example, it is unclear that the predicted optima of nitrogen input are within the observed range of levels.}
 
-    Added line 274: The data were produced by a yield monitor in an Argentinian corn field trial conducted by incorporating six nitrogen rate treatments \textcolor{red}{which are systematically allocated} in three replicated blocks comprising eighteen strips \textcolor{red}{(ranges) and 93 rows}. 
+    Added line 307 that ``The data were produced by a yield monitor in an Argentinian corn field trial conducted by incorporating six nitrogen rate treatments \textcolor{red}{which are systematically allocated} in three replicated blocks comprising eighteen strips \textcolor{red}{(ranges) and 93 rows}. ''
     
-    Added figure 1 (b). 
+    We also replace Figure 1 (c) with the allocation of the treatments. 
     
     \item \qtitle{It would be useful to show a model with fixed regression terms, i.e. $V_u = 0$, as a benchmark, as this is what would be routinely used for this kind of experiment. In fact, showing that $V_u$ is not zero would be central in order to demonstrate that it is worthwhile to fit spatially varying coefficients and that the central hypothesis of precision farming is valid (see Piepho et al. 2011, whom the authors are citing).}
 
@@ -125,7 +127,9 @@ I applaud the authors for implementing this model, which is a major step forward
 
     \item \qtitle{How did the authors determine the optimal inputs? Some explanation of the algebra would be useful. I suspect these are inputs maximizing yield, but as a farmer I'd be more concerned with economic optima. What about credible intervals for the predicted optima? How wide are they? Can this width be mapped as well?}
 
-    Added: Line 281 To obtain the map of locally varying optimal input rates, we assume a quadratic form of the response in model (6). In other words, the levels of fixed and random effects are $l=3$ and $k=3$. Hence, the optimal treatment is possible by calculating a simple quadratic equation for each grid when the coefficients become available.
+    Added: Line 315 ``\textcolor{red}{To obtain the map of locally varying optimal input rates, we specified a quadratic regression model, in which the corn yield is modelled as a quadratic function of the nitrogen rate. The optimal treatment can be determined by estimating the coefficients of the quadratic regression model at each grid point.} ''
+    
+    Also revised from Line 436 ``\textcolor{red}{Because we have fitted a quadratic response of yield to nitrogen rates, we can compute the optimal nitrogen rate $\tilde{N}_{i}$ for the $i$th grid point using $\tilde{N}_{i} = -\hat{\beta}_{1}/(2\hat{\beta}_{2})$, $i=1,\ldots,n$. However, if the optimum rate exceeds the maximum rate $N_{\mbox{max}} = 124.6$ kg/ha used in the trial, the maximum rate has been chosen as the optimal rate. Therefore, we can compute the adjusted optimal rate $\hat{N}_i = \min\{ \tilde{N}_i, N_{\mbox{max}}\}$ for $i=1,\ldots,n$. }''
 
     \item \qtitle{How was the topographic factor incorporated into the model, and how does this factor align with blocks? It would help to see the estimates of all the fixed effects of the models fitted.}
 
@@ -135,7 +139,11 @@ I applaud the authors for implementing this model, which is a major step forward
 
     \item \qtitle{Eq. (11): What does LKJ stand for? What are the parameters of this model? I did not find and output for the actual correlations or covariances among the random coefficients. Can these be reported? Random coefficient models are notoriously difficult to fit, and proper scaling of the covariates is usually essential. Did the authors encounter such issues and how did they deal with them?}
 
-    Added to line 174: a positive definite correlation matrix sampled from the Lewandowski-Kurowicka-Joe (LKJ) distribution \parencite{Lewandowski2009Generating}. 
+    Revised the paragraph in line 192: ``\textcolor{red}{For the matrix $R_u$ with correlation coefficients, we specify the Lewandowski-Kurowicka-Joe (LKJ) distribution \parencite{Lewandowski2009Generating} as the prior distribution, and this specification is given by
+	\begin{equation}\label{eq:RPrior}
+		R_u \sim \text{LKJcorr}(\epsilon),
+	\end{equation}
+	where $\text{LKJcorr}(\epsilon)$ is a positive definite correlation matrix sampled from the LKJ distribution that depends on the value of a positive parameter $\epsilon$. The parameter $\epsilon$ controls the correlations in a way that, as the value of $\epsilon$ increases, the correlations amongst parameters decrease.}''
     
     As shown in Figure 2. The correlation parameters are reported in Table 5.
      
@@ -146,15 +154,15 @@ I applaud the authors for implementing this model, which is a major step forward
 
     \item \qtitle{Figure 8: This map only shows optimum levels for a very limited part of the field. What about the big white area??!!}
 
-    This proves that the quadratic relationship is not significant for the data set we have. It is more like a linear relationship. The results are consistent with GWR, where the adjusted $p$-values are more than 0.05 for the quadratic term. It is explained in line 381. 
+    This proves that the quadratic relationship is not significant for the data set we have. It is more like a linear relationship. The results are consistent with GWR, where the adjusted $p$-values are more than 0.05 for the quadratic term.
 
     \item \qtitle{L405: I do not think it is correct to say that the influence of the prior is washed out if the model is good enough. It is the amount of data that determines the influence of the prior.}
     
     Thank you for pointing it out. It is not a precise statement. We have made the amendments accordingly. 
     
-    Line 245: The application of posterior predictive distributions is robust to prior specification because the details of the prior are washed out by the likelihood \parencite{Gelman2017Prior}.
+    Line 271: The application of posterior predictive distributions is robust to prior specification because the details of the prior are washed out by the likelihood \parencite{Gelman2017Prior}.
     
-    Line 409: Additionally, the reliability of the Bayesian approach is affected by the priors and the model itself, whereas the influence of the prior \textcolor{red}{reduces if the amount of data increases}.    
+    Revised line 453: However, the influence of the prior \textcolor{red}{reduces if the amount of data increases}.    
     
 \end{enumerate}
 
@@ -180,9 +188,9 @@ The manuscript deals with an important topic of modelling spatial variability in
     
     \item \qtitle{What is expected error variance in equation (27)? How to determine it? Will the error in spatial variability problem be linear?}
     
-	The term ``error variance'' maybe confusing. Alternatively, we can see ``residual variance''. 
+	The term ``error variance'' maybe confusing. Alternatively, we use the term ``residual variance''. 
 	
-	Added in line 267: residual variance. Reference \textcite{Gabry2019Visualization}. 
+	Added in Line 290: \textcolor{red}{residual variance}. Reference \textcite{Gabry2019Visualization}. 
 	
 	For a Bayesian hierarchical model, we have $\E(\bm{Y}) = \bm{X}\bm{b} + \bm{Z}\Sigma_u\bm{Z}^\top$ and $\Var(\bm{Y}) = \Sigma_e$. The spatial variability is accounted for in the random term rather than in the error term. 
     
