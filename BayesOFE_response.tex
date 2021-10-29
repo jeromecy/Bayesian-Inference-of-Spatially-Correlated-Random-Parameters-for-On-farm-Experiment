@@ -46,7 +46,7 @@
 
 
 \title{Response to Reviewers' Comments \\ 
-\large on the paper Manuscript Number: FIELD-D-21-01010 \\ Bayesian Inference of Spatially Correlated Random Parameters for On-farm Experiment}
+\large on the manuscript (FIELD-D-21-01010) \\ Bayesian Inference of Spatially Correlated Random Parameters for On-farm Experiment}
 
 
 \author[1]{Zhanglong Cao}
@@ -63,43 +63,49 @@
 \maketitle
 
 
-We are all grateful to the reviewers and editors for their time and efforts on our manuscript. The comments from the reviewers are indeed will make the manuscript better in terms of accurate description and easy understanding. 
-
-We have addressed the comments and amended the manuscript accordingly. The amendments in the manuscript to address the reviewers' comments are \textcolor{red}{highlighted in red colour}. We also polished the manuscript to make it clear to read. 
-
+We thank the Associate Editor and Reviewers for their helpful comments. We have tried to comply with all the recommendations, and the \textcolor{red}{\textbf{red text}} within our response refers to actions taken to modify the paper. 
 
 \section*{Reviewer 1}
 
-The authors implement a spatially explicit random coefficient model for data from on-farm trials that allows mapping the optimal levels of an agronomic input. They use a Bayesian framework and illustrate the approach using a randomized complete block trial with six nitrogen treatment levels.
+\textcolor{blue}{Reviewer 1 writes}:
+\textit{\textcolor{blue}{The authors implement a spatially explicit random coefficient model for data from on-farm trials that allows mapping the optimal levels of an agronomic input. They use a Bayesian framework and illustrate the approach using a randomized complete block trial with six nitrogen treatment levels.}}
 
-I applaud the authors for implementing this model, which is a major step forward in the analysis of spatially referenced on-farm trial data. I have a couple of comments for the authors.
+\textit{\textcolor{blue}{I applaud the authors for implementing this model, which is a major step forward in the analysis of spatially referenced on-farm trial data. I have a couple of comments for the authors.}}
+
+We are glad that the Reviewer-1 has applauded the modelling approach proposed in our paper for analysing large on-farm strip experiments. We are also glad that the Reviewer-1 has found this paper as a major step forward in the analysis of spatially referenced on-farm trial data; our aim with this paper was to develop a Bayesian framework that would provide a guided workflow for any analyst to perform the analysis using his/her own geo-referenced on-farm data set. Below we provide our responses separately to each of the questions from the Reviewer-1.
 
 \begin{enumerate}
-    \item \qtitle{Why did they not simply use a REML package to fit the model? If there are any major obstacles, these should be discussed, as many users would use REML as a default approach.}
+    \item \qtitle{\textcolor{blue}{Why did they not simply use a REML package to fit the model? If there are any major obstacles, these should be discussed, as many users would use REML as a default approach.}}
     
-    In Line 489 in the Discussion section, we added ``\textcolor{red}{Another potential method of analysis is based on the residual maximum likelihood (REML). The estimation of regression coefficients under the REML framework would require the development of a computing algorithm that would take into account the spatial correlation of the random effects while computing the best linear unbiased predictors of the treatment effects. }''
+     We agree with the Reviewer-1 that REML based methods are predominantly used for the analysis of agricultural field trial data sets. We are currently working on a journal article that develops a REML based method for analysing models with spatially-correlated random coefficients. The major obstacle of implementing a REML based estimation is the unavailability of suitable software that could incorporate the spatial correlation structure shown in (7) of the paper, and provide the BLUPs corresponding to the random terms at each grid point. The \asreml  ~ package allows to incorporate several spatial variance-covariance structures in the linear mixed effects modelling framework, but, to the best of our knowledge, it is not straightforward to fit our proposed model using \asreml. We are currently developing an algorithm that would fit the model under the REML framework, and it would be made public very soon after the publication of the associated REML based article.
+     
+    \textcolor{red}{\textbf{In Line 489 in the Discussion section, we have added ``Another potential method of analysis is based on the residual maximum likelihood (REML). The estimation of regression coefficients under the REML framework would require the development of a computing algorithm that would take into account the spatial correlation of the random effects while computing the best linear unbiased predictors of the treatment effects.''}}
     
-    The use of the REML package is discussed in our \textit{Random Coefficient Regression} (RCR) paper, which is in preparation. To implement the model in the REML package, such as \asreml, we split the process into two phases: in phase 1, we estimated the correlation parameters $\rho_c$ and $\rho_r$ of $\AR\otimes\AR$ through a two-dimensional grid search; in phase 2, the final model is estimated with the correlation parameters found in phase 1. The entire process is prolonged compared to the Bayesian model in our paper. Additionally, for Bayesian approach, all parameters are estimated at the same time by the NUTS sampler rather than in two separate phases by REML. We compare and discuss the two approaches in the RCR paper. 
+   
     
-    The objective of this paper is proposing the Bayesian approach and comparing with GWR. The Bayesian approach in \rstan\ is more efficient and it overcomes the disadvantages of GWR, such as bandwidth selection. 
+    \item \qtitle{\textcolor{blue}{The example is a randomized complete block design with three reps and six nitrogen levels. I would think that this design is superbly inadequate for assessing locally varying optimal input rates. Nitrogen levels would need to be varied on a finer grid, as the authors hint themselves in the introduction. Can they not find a more suitable dataset to illustrate their modelling approach? If not, the paper is best characterized as a proof-of-concept.}}
     
-    \item \qtitle{The example is a randomized complete block design with three reps and six nitrogen levels. I would think that this design is superbly inadequate for assessing locally varying optimal input rates. Nitrogen levels would need to be varied on a finer grid, as the authors hint themselves in the introduction. Can they not find a more suitable dataset to illustrate their modelling approach? If not, the paper is best characterized as a proof-of-concept.}
+    We believe that there may be some misunderstanding on the part of the Reviewer-1 about the trial design and the spatial resolution of the yield data reported for the Las Rosas corn field experiment (see Figure~1(c)). The design used is not the randomized complete block design. It is a \emph{systematic design} with three replicated blocks, where six nitrogen rates were applied within each block. The ordering of the nitrogen rates is same in all three blocks. \\
+    \textcolor{red}{\textbf{In lines 307--309, we have added ``The data were produced by a yield monitor in an Argentinian corn field trial conducted by incorporating six nitrogen rate treatments which are systematically allocated in three replicated blocks comprising 18 strips (columns) and 93 rows."}}
     
-	\textcite{Piepho2011Statistical, Pringle2004FieldScale} have stated that to obtain an optimal treatment map, a systematic design over performs to a randomised design. We found that the results are consistent through simulation studies. The manuscript \textit{Optimal design for on-farm strip trials --- systematic or randomised?} is in preparation. If the goal of OFE is obtaining a smooth map showing the optimal level of a controllable input across a grid made by rows and columns covering the whole field, a systematic design should be preferred over a randomised design in terms of robustness and reliability. 
-	
-	However, the model of obtaining such a treatment map was not properly developed until the GWR paper by \textcite{Rakshit2020Novel}. With the adoption of Bayesian approach, we are comparing the results with GWR on the same data set. Besides, we proposed the Bayesian workflow and discussed potential model misspecification, which are ignored by researchers. 
+    
+    We agree with the Reviewer-1 that nitrogen levels would need to be varied on a finer grid, and indeed, that is the case for the Las Rosas corn field trial data set. Because there are three replications of six nitrogen rates, we do not have only $6\times3 = 18$ observations, which will be the case for a randomised complete block design. The trial was $810$ metre long with $93$ rows and $150$ metre wide with $18$ columns.  Therefore, we had $93 \times 18 = 1674$ observations, separated from each other on average by $8.8$ metres. This is a standard spatial resolution considered for estimating spatially-varying treatment effects, and subsequently, for delineating site-specific management zones \parencite{Rakshit2020Novel, Evans2020Assessment}. Furthermore, it is now well understood that a systematic design should be preferred over a randomised design for obtaining a map of spatially-varying optimal treatment levels \parencite{Piepho2011Statistical, Pringle2004FieldScale}. \\ \textcolor{red}{\textbf{In lines 312--313, we have added ``The field area of the Las Rosas experiment is approximately 810 metres long and 150 metres wide."}} \\
+    \textcolor{red}{\textbf{In lines 56--58, we have stated ``Randomisation does not play the same crucial role in the analysis of large strip experiments -- a systematic design is more suitable for estimating spatially-varying treatment effects \parencite{Rakshit2020Novel, Piepho2011Statistical, Evans2020Assessment}."}}
 
-    \item \qtitle{The paper has a lot of mathematical detail. This is unavoidable with this kind of modelling and an absolute necessity. That being said, it seems to me that the example could play a much more central role in guiding the uninitiated reader. For example, the authors never even state that the purpose of their analysis is to determine the locally varying rate of nitrogen input! This key objective, along with a brief sketch of the example, would sit well in the introduction, thus triggering the readers' interest. Without such a teaser, my prediction is that 99.9\% of the readers will put the paper down after the first few equations. Also, when stating the model for the first time, explain what is in $Zu$!! This is the key component of the model. Moreover, explain that you will be fitting a quadratic polynomial, as this is essential in order to be able to determine an optimum! Also tell readers how this is done, even if it seems too obvious to a statistician: 99.9\% of your readership will not be statisticians.}
+
+    \item \qtitle{\textcolor{blue}{The paper has a lot of mathematical detail. This is unavoidable with this kind of modelling and an absolute necessity. That being said, it seems to me that the example could play a much more central role in guiding the uninitiated reader. For example, the authors never even state that the purpose of their analysis is to determine the locally varying rate of nitrogen input! This key objective, along with a brief sketch of the example, would sit well in the introduction, thus triggering the readers' interest. Without such a teaser, my prediction is that 99.9\% of the readers will put the paper down after the first few equations. Also, when stating the model for the first time, explain what is in $Zu$!! This is the key component of the model. Moreover, explain that you will be fitting a quadratic polynomial, as this is essential in order to be able to determine an optimum! Also tell readers how this is done, even if it seems too obvious to a statistician: 99.9\% of your readership will not be statisticians.}}
+    
+    We agree with the Reviewer-1 that some of the mathematical details are absolutely necessary to explain the entire Bayesian modelling workflow. The main criticism seems to be that we did not use the example enough to motivate the readers about the problem. We do not agree completely with this assertion, and below we provide our point-by-point responses to the above comment from the Reviewer-1. However, we have still taken his/her comment to heart and have greatly polished the writing in our present version of the draft to put more focus on the Las Rosas data example, motivating readers to follow the step-by-step analysis workflow for determining the locally-varying optimum nitrogen input.   
 
     We have introduced our research object in Line 47: ``Our  aim  in  this  paper  is to  obtain  spatially-varying  estimates  of  treatment  effects,  which  in  turn  enables  the creation of spatial maps of optimum treatment levels for large paddocks. ''
     
-    For the term $Zu$ in equation (1), we have explained what they are in Line 114. 
+    For the term $Zu$ in equation (1), we have explained in Line 114. 
     
-    For the terms $z$ and $u$ in equation (5), we have explained what they are in Line 145. 
+    For the terms $z$ and $u$ in equation (5), we have explained in Line 145. 
     
     For the term $z_u$ in equation (17), we have explained in Line 220. 
     
-    \item (4) \qtitle{The Bayesian $R^2$ in eq. (27) does not account for spatial covariance. It uses just the marginal variance. This seems inappropriate for the data at hand, which are spatially correlated, a feature that is, in fact, central to the whole modelling approach. In linear mixed models in general, and in a spatial context in particular, there are pairwise correlations among observations. A natural way to account for this is the semivariance and averaging this across all pairs of observations, or integrating across the random field, naturally leads to an $R^2$ that does account for correlation. See Piepho, H.P. (2019): A coefficient of determination ($R^2$) for generalized linear mixed models. Biometrical Journal 61, 860-872.}
+    \item \qtitle{\textcolor{blue}{The Bayesian $R^2$ in eq. (27) does not account for spatial covariance. It uses just the marginal variance. This seems inappropriate for the data at hand, which are spatially correlated, a feature that is, in fact, central to the whole modelling approach. In linear mixed models in general, and in a spatial context in particular, there are pairwise correlations among observations. A natural way to account for this is the semivariance and averaging this across all pairs of observations, or integrating across the random field, naturally leads to an $R^2$ that does account for correlation. See Piepho, H.P. (2019): A coefficient of determination ($R^2$) for generalized linear mixed models. Biometrical Journal 61, 860-872.}}
         
     
     The concept of Bayesian $R^2$ is different from the $R^2$ of LMM or GLMM or ANOVA. Let's say the model
@@ -113,31 +119,31 @@ I applaud the authors for implementing this model, which is a major step forward
 
     Hence, in this paper, the Bayesian $R^2$ given by \textcite{Gelman2019Rsquared} is appropriate. 
     
-    \item \qtitle{The field layout of the treatment design should be shown. Were treatments randomized within complete reps? How many observations were there per plot? What were the six treatment levels? This is absolutely key information, without which it is impossible to judge the results of the analysis. For example, it is unclear that the predicted optima of nitrogen input are within the observed range of levels.}
+    \item \qtitle{\textcolor{blue}{The field layout of the treatment design should be shown. Were treatments randomized within complete reps? How many observations were there per plot? What were the six treatment levels? This is absolutely key information, without which it is impossible to judge the results of the analysis. For example, it is unclear that the predicted optima of nitrogen input are within the observed range of levels.}}
 
     Added line 307 that ``The data were produced by a yield monitor in an Argentinian corn field trial conducted by incorporating six nitrogen rate treatments \textcolor{red}{which are systematically allocated} in three replicated blocks comprising eighteen strips \textcolor{red}{(ranges) and 93 rows}. ''
     
     We also replace Figure 1 (c) with the allocation of the treatments. 
     
-    \item \qtitle{It would be useful to show a model with fixed regression terms, i.e. $V_u = 0$, as a benchmark, as this is what would be routinely used for this kind of experiment. In fact, showing that $V_u$ is not zero would be central in order to demonstrate that it is worthwhile to fit spatially varying coefficients and that the central hypothesis of precision farming is valid (see Piepho et al. 2011, whom the authors are citing).}
+    \item \qtitle{\textcolor{blue}{It would be useful to show a model with fixed regression terms, i.e. $V_u = 0$, as a benchmark, as this is what would be routinely used for this kind of experiment. In fact, showing that $V_u$ is not zero would be central in order to demonstrate that it is worthwhile to fit spatially varying coefficients and that the central hypothesis of precision farming is valid (see Piepho et al. 2011, whom the authors are citing).}}
 
     Our model didn't include the conventional fixed and random terms, such as the replicate structure and blocking structure. It is because the replicate factor is not significant. 
     
     Alternatively, we use nitrogen treatment levels as both fixed and random terms. Our assumption is that there is a global trend on the treatment against yield, and the local treatment in each grid is adjusted by the model. The main purpose of the proposed approach is to compare with GWR model \parencite{Rakshit2020Novel}.
 
-    \item \qtitle{How did the authors determine the optimal inputs? Some explanation of the algebra would be useful. I suspect these are inputs maximizing yield, but as a farmer I'd be more concerned with economic optima. What about credible intervals for the predicted optima? How wide are they? Can this width be mapped as well?}
+    \item \qtitle{\textcolor{blue}{How did the authors determine the optimal inputs? Some explanation of the algebra would be useful. I suspect these are inputs maximizing yield, but as a farmer I'd be more concerned with economic optima. What about credible intervals for the predicted optima? How wide are they? Can this width be mapped as well?}}
 
     Added: Line 315 ``\textcolor{red}{To obtain the map of locally varying optimal input rates, we specified a quadratic regression model, in which the corn yield is modelled as a quadratic function of the nitrogen rate. The optimal treatment can be determined by estimating the coefficients of the quadratic regression model at each grid point.} ''
     
     Also revised from Line 436 ``\textcolor{red}{Because we have fitted a quadratic response of yield to nitrogen rates, we can compute the optimal nitrogen rate $\tilde{N}_{i}$ for the $i$th grid point using $\tilde{N}_{i} = -\hat{\beta}_{1}/(2\hat{\beta}_{2})$, $i=1,\ldots,n$. However, if the optimum rate exceeds the maximum rate $N_{\mbox{max}} = 124.6$ kg/ha used in the trial, the maximum rate has been chosen as the optimal rate. Therefore, we can compute the adjusted optimal rate $\hat{N}_i = \min\{ \tilde{N}_i, N_{\mbox{max}}\}$ for $i=1,\ldots,n$. }''
 
-    \item \qtitle{How was the topographic factor incorporated into the model, and how does this factor align with blocks? It would help to see the estimates of all the fixed effects of the models fitted.}
+    \item \qtitle{\textcolor{blue}{How was the topographic factor incorporated into the model, and how does this factor align with blocks? It would help to see the estimates of all the fixed effects of the models fitted.}}
 
     The block/replicate factor is not significant compared to the topographic factor. But when we tried to incorporate the topographic factors as either fixed and random term in our study, and the posterior checking shows severe model misspecification even though the $R^2$ value is high. Particularly when topographic factor is fitted as the random term, the model is be over fitted because the spatial variance is fitted twice. 
     
     Being more ambitious, we may try to fit $\Sigma_u(topo)$ varying across different topographies. But the model will be more complex and slows down the computing speed. 
 
-    \item \qtitle{Eq. (11): What does LKJ stand for? What are the parameters of this model? I did not find and output for the actual correlations or covariances among the random coefficients. Can these be reported? Random coefficient models are notoriously difficult to fit, and proper scaling of the covariates is usually essential. Did the authors encounter such issues and how did they deal with them?}
+    \item \qtitle{\textcolor{blue}{Eq. (11): What does LKJ stand for? What are the parameters of this model? I did not find and output for the actual correlations or covariances among the random coefficients. Can these be reported? Random coefficient models are notoriously difficult to fit, and proper scaling of the covariates is usually essential. Did the authors encounter such issues and how did they deal with them?}}
 
     Revised the paragraph in line 192: ``\textcolor{red}{For the matrix $R_u$ with correlation coefficients, we specify the Lewandowski-Kurowicka-Joe (LKJ) distribution \parencite{Lewandowski2009Generating} as the prior distribution, and this specification is given by
 	\begin{equation}\label{eq:RPrior}
@@ -148,15 +154,15 @@ I applaud the authors for implementing this model, which is a major step forward
     As shown in Figure 2. The correlation parameters are reported in Table 5.
      
 
-    \item \qtitle{Eq. (17): The $\AR\otimes \AR$ model vor $V_s$ has different parameters than the one for $\Sigma_e$. Somehow, this should be reflected in the notation of both model components.}
+    \item \qtitle{\textcolor{blue}{Eq. (17): The $\AR\otimes \AR$ model vor $V_s$ has different parameters than the one for $\Sigma_e$. Somehow, this should be reflected in the notation of both model components.}}
 
     In conventional statistical model in equation (3-5), the covariance matrix is imposed to $\Sigma_e$. But for the proposed Bayesian model, the covariance matrix is incorporated with the random parameter $u$. So for $\Sigma_e$, it is just $\sigma_e*I$. 
 
-    \item \qtitle{Figure 8: This map only shows optimum levels for a very limited part of the field. What about the big white area??!!}
+    \item \qtitle{\textcolor{blue}{Figure 8: This map only shows optimum levels for a very limited part of the field. What about the big white area??!!}}
 
     This proves that the quadratic relationship is not significant for the data set we have. It is more like a linear relationship. The results are consistent with GWR, where the adjusted $p$-values are more than 0.05 for the quadratic term.
 
-    \item \qtitle{L405: I do not think it is correct to say that the influence of the prior is washed out if the model is good enough. It is the amount of data that determines the influence of the prior.}
+    \item \qtitle{\textcolor{blue}{L405: I do not think it is correct to say that the influence of the prior is washed out if the model is good enough. It is the amount of data that determines the influence of the prior.}}
     
     Thank you for pointing it out. It is not a precise statement. We have made the amendments accordingly. 
     
@@ -174,19 +180,19 @@ I applaud the authors for implementing this model, which is a major step forward
 
 The manuscript deals with an important topic of modelling spatial variability in large on-farm trials. A Bayesian framework is adopted to estimate the posterior distribution of parameters. Also, the proposed method is applied on a real on-farm strip trial from Las Rosas, Argentina, with the aim of obtaining a spatial map of optimal nitrogen rates for the entire paddock. The manuscript requires revision before it can be accepted for publication. My specific comments are listed below:
 \begin{enumerate}
-    \item \qtitle{Why was weakly informative prior preferred? How do you define a weakly or strongly informative prior?}
+    \item \qtitle{\textcolor{blue}{Why was weakly informative prior preferred? How do you define a weakly or strongly informative prior?}}
     
-    The general idea is that such a prior affects the information in the likelihood as weakly as possible \parencite{Gelman2017Prior}. However, vague priors failed in the prior checking. Based on \textcite{Gabry2019Visualization}'s work, we say that a prior leads to a weakly informative joint prior data-generating process if draws from the prior data-generating distribution could represent any data set that could plausibly be $p(y)$ observed. A strongly informative prior might have a smaller deviation and/or high influence on the posterior distribution.
+    The general idea is that such a prior affects the information in the likelihood as weakly as possible \parencite{Gelman2017Prior}. However, vague priors failed in the prior checking. Based on \textcite{Gabry2019Visualization}'s work, we say that a prior leads to a weakly informative joint prior data-generating process if draws from the prior data-generating distribution could represent any data set that could plausibly be $p(y)$ observed. The observed data in our paper follows a bimodal distribution. The weakly informative prior checking shows that the proposed priors gives normally distributed simulations within a reasonable range. For example, no-negative values for crop yield data. It is not strong and does not give produce bimodal data that perfectly fits the observation. It is absolutely fine, and it is the meaning of weakly informative priors. 
     
-    \item \qtitle{Four models are used in the analysis with conditions of with or without spatial correlation. Why was the model uncertainty of each of them not characterised?}
+    \item \qtitle{\textcolor{blue}{Four models are used in the analysis with conditions of with or without spatial correlation. Why was the model uncertainty of each of them not characterised?}}
     
     The uncertainty and misspecification are investigated and determined by LOO PIT and Pareto $\hat{k}$ values \parencite{Gabry2019Visualization}. It is identified that the model is misspecified if the spatial variability is not accounted for. 
 
-    \item \qtitle{Figure 3 presents the realisations of 100 simulations. It is known that more informative prior will give better results than vague prior. The results do not suggest anything new. The authors could have analysed the uncertainty of model prediction.}
+    \item \qtitle{\textcolor{blue}{Figure 3 presents the realisations of 100 simulations. It is known that more informative prior will give better results than vague prior. The results do not suggest anything new. The authors could have analysed the uncertainty of model prediction.}}
     
     It is not new, but it provides a visualisation perspective on prior checking, rather than picking up priors from references and evaluating them by posterior checking. 
     
-    \item \qtitle{What is expected error variance in equation (27)? How to determine it? Will the error in spatial variability problem be linear?}
+    \item \qtitle{\textcolor{blue}{What is expected error variance in equation (27)? How to determine it? Will the error in spatial variability problem be linear?}}
     
 	The term ``error variance'' maybe confusing. Alternatively, we use the term ``residual variance''. 
 	
@@ -194,11 +200,11 @@ The manuscript deals with an important topic of modelling spatial variability in
 	
 	For a Bayesian hierarchical model, we have $\E(\bm{Y}) = \bm{X}\bm{b} + \bm{Z}\Sigma_u\bm{Z}^\top$ and $\Var(\bm{Y}) = \Sigma_e$. The spatial variability is accounted for in the random term rather than in the error term. 
     
-    \item \qtitle{In equation (28) how are correlation parameters determined?}
+    \item \qtitle{\textcolor{blue}{In equation (28) how are correlation parameters determined?}}
     
     Example in figure 2. It is a positive definite correlation matrix sampled from the Lewandowski-Kurowicka-Joe (LKJ) distribution \parencite{Lewandowski2009Generating, McElreath2015Statistical}. 
     
-    \item \qtitle{In Figure 4, PP(posterior predictive) checking is done against the observed data Y. But you have used the same dataset to update the parameters and obtained posterior distribution of parameters. Hence, the posterior predictive results will be close to the observations. The authors could have checked the reliability of the model by performing PP checking on some other dataset obtained from the same site.}
+    \item \qtitle{\textcolor{blue}{In Figure 4, PP(posterior predictive) checking is done against the observed data Y. But you have used the same dataset to update the parameters and obtained posterior distribution of parameters. Hence, the posterior predictive results will be close to the observations. The authors could have checked the reliability of the model by performing PP checking on some other dataset obtained from the same site.}}
     
     The PP check is like a simulation checking method that uses posterior distribution to generates ``new'' data and compare it with the observed data set. It is used to check the performance of the parameters by comparing two data. It is defined in equation (24). 
     
