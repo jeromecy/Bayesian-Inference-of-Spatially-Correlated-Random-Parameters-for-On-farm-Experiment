@@ -114,7 +114,7 @@
 	
 	\subsection{Statistical model for field experiments}\label{sec:fieldmodel}
 	
-	A field experiment can be considered as a rectangular array, consisting of $r$ rows and $c$ columns, where the total number of observed data points is $n= r\times c$. We adopt the notation used by \textcite{Zimmerman1991Randoma}, in which $s_i\in \mathbb{R}^2, i=1,\ldots,n$, is a two-cell vector of the Cartesian coordinates of the plot centroid corresponding to the $i$th plot. Let $y(s_i)$ be the real-valued dependent variable corresponding to the $i$th plot. Let $\bm{Y}$ be the vector of responses from all $n$ plots, ordered as columns within rows. Then a linear mixed effects model for $\bm{Y}$, using the matrix notation, is 
+	A field experiment can be considered as a rectangular array, consisting of $r$ rows and $c$ columns, where the total number of observed data points is $n= r\times c$. We adopt the notation used by \textcite{Zimmerman1991Randoma}, in which $s_i\in \mathbb{R}^2, i=1,\ldots,n$, is a two-cell vector of the Cartesian coordinates of the plot centroid corresponding to the $i$th plot. Let $y(s_i)$ be \textcolor{red}{the real-valued response variable corresponding to the $i$th plot, and let $\bm{Y}$ denote the vector consisting of response data from all $n$ plots, ordered as rows within columns.} Then a linear mixed effects model for $\bm{Y}$, using the matrix notation, is 
 	\begin{equation}\label{eq:modelmatrix}
 		\bm{Y} = \bm{X}\bm{b}+\bm{Z}\bm{u}+\bm{e},
 	\end{equation}
@@ -131,21 +131,21 @@
 	\begin{equation}\label{eq:distributionY}
 		\bm{Y} \sim \N(\bm{X}\bm{b},\bm{Z}\Sigma_u\bm{Z}^\top+\Sigma_e),
 	\end{equation}
-	where $\Sigma_u$ and $\Sigma_e$ are variance-covariance matrices corresponding to the random vectors $\bm{u}$ and $\bm{e}$, respectively. The covariance matrix $\Sigma_e$ can accommodate a separable first or second order autoregressive process to model the variance structure of the plot residuals. \textcite{Gilmour1997Accounting} suggested a separable first-order autoregressive $\AR\times \AR$ process with column and row correlation matrices $\Sigma_c$ and $\Sigma_r$, respectively, to model the residual covariance structure, and this is given by 
+	where $\Sigma_u$ and $\Sigma_e$ are variance-covariance matrices corresponding to the random vectors $\bm{u}$ and $\bm{e}$, respectively. The fixed term $\bm{b}$ in \eqref{eq:modelmatrix} typically represents the treatment effects under consideration, and the random term $\bm{u}$ represents the effects of blocking units imposed by an experimental design \parencite{piepho2003}. The residuals $\bm{e}$ are often assumed spatially correlated.
+	
+	The covariance matrix $\Sigma_e$ can accommodate a separable first or second order autoregressive process to model the spatial correlation of plot residuals. \textcite{Gilmour1997Accounting} suggested a separable first-order autoregressive $\AR\times \AR$ process with column and row correlation matrices $\Sigma_c$ and $\Sigma_r$, respectively, to model the residual covariance structure, and this is given by 
 	\begin{equation}\label{eq:ar1}
 		\Sigma_e =\sigma^2\Sigma_c(\rho_c) \otimes \Sigma_r(\rho_r),
 	\end{equation}
-	where $\otimes$ denotes the Kronecker product, $\sigma^2$ is the residual variance component, and the parameters $\rho_c$ and $\rho_r$ determine the strengths of spatial correlations in the column and row directions, respectively. Note that the model \ref{eq:modelmatrix} assumes spatially-invariant treatment effects 
+	where $\otimes$ denotes the Kronecker product, $\sigma^2$ is the residual variance component, and the parameters $\rho_c$ and $\rho_r$ determine the strengths of spatial correlations in the column and row directions, respectively. Note that sorting the data rows within columns produces the neat representation \eqref{eq:ar1} of $\Sigma_e$ in terms of two correlation matrices. In the case where there is no spatial autocorrelation, the residual variance-covariance matrix becomes $\Sigma_e=\sigma^2 I_n$. 
 	
-	model such as In the case where there is no spatial autocorrelation, the residual variance-covariance matrix becomes $\Sigma_e=\sigma^2 I_n$. 
+	\textcolor{blue}{In the context of our large strip-trial example in Section~\ref{sec:analysis}, the fixed effects $\bm{b}$ would correspond to the (global) regression parameters for the entire trial, and the random effects $\bm{u}$ would correspond to the local departures from these global parameters}. When analysing a small plot experiment using a linear mixed effects model with $h$ random terms in which each term is of dimension $m\times 1$, it is typically assumed that these terms are independently distributed of each other, imposing a direct sum structure on the variance matrix $\Sigma_u=\oplus_{j=1}^h\sigma_{u_j}^2I_m$ for $\bm{u}$ with variance components $\sigma^{2}_{u_j}$, $j=1,\ldots,h$ \parencite{butler2009}. In contrast, any analysis of a large strip experiment would require to incorporate correlated random effects in the regression model to account for the spatial correlations amongst treatment effects. 
 	
-	When analysing a small plot experiment using a linear mixed effects model with $h$ random terms in which each term is of dimension $m\times 1$, we would typically assume that these terms are independently distributed of each other and consider the variance matrix $G=\oplus_{j=1}^h\sigma_{u_j}^2I_m$ for $\bm{u}$ with variance components $\sigma^{2}_{u_j}$, $j=1,\ldots,h$. In contrast, any analysis of a large strip experiment would require to incorporate correlated random effects in the regression model to account for the spatial correlations amongst treatment effects, as discussed below in the next two subsections. 
 	
-	\textcolor{blue}{In the context of our large strip-trial example in Section~\ref{sec:analysis}, the fixed effects $\bm{b}$ correspond to the (global) regression parameters for the entire trial, whereas the random effects $\bm{u}$ correspond to the local departures from these global parameters}.
 	
 	\subsection{Bayesian hierarchical model}\label{sec:hierarchical}
 	
-	In the context of large strip experiments, we have $n$ grid points instead of $n$ plots, as defined for general field experiments in the section above. At each of these $n$ grid points, the response variable is measured, and the values of treatment factor and other spatial covariates are recorded. This is similar to the setup considered by \textcite{Rakshit2020Novel}. These authors proposed a GWR model for analysing data arising from large strip experiments. GWR allows spatial nonstationarity in modelled relationships and estimates spatially-varying parameters governing these relationships by maximising local loglikelihoods. The regression function defined in GWR can also be written in the form of a linear mixed effects model, given in \eqref{eq:modelmatrix}. The main difference between the linear mixed effects model \eqref{eq:modelmatrix} and our Bayesian approach is that, in the Bayesian model, we treat both model components $\bm{b}$ and $\bm{u}$ as random vectors, i.e., some (prior) distributions are specified for both $\bm{b}$ and $\bm{u}$, along with a distribution for the error term \parencite{Burkner2017Brms}. Consequently, the uncertainty associated with the estimates of the model parameters can be derived using posterior distributions. 	
+	In the context of large strip experiments, we have $n$ grid points instead of $n$ plots, as defined for general field experiments in the section above. At each of these $n$ grid points, the response variable is measured, and the values of treatment factor and other spatial covariates are recorded. This is similar to the setup considered by \textcite{Rakshit2020Novel}. These authors proposed a GWR model for analysing data arising from large strip experiments. GWR allows spatial nonstationarity in modelled relationships and estimates spatially-varying parameters governing these relationships by maximising local loglikelihoods. The regression function defined in GWR can also be written in the form of a linear mixed effects model, given in \eqref{eq:modelmatrix}. The main difference between the linear mixed effects model \eqref{eq:modelmatrix} and the Bayesian approach is that, in the Bayesian model, we treat both model components $\bm{b}$ and $\bm{u}$ as random vectors, i.e., some (prior) distributions are specified for both $\bm{b}$ and $\bm{u}$, along with a distribution for the error term \parencite{Burkner2017Brms}. Consequently, the uncertainty associated with the estimates of the model parameters can be derived using posterior distributions. 	
 	
 %  	Using the notation introduced in the previous section, the underlying model for analysing a large strip experiment is given by 
 % 	\begin{equation}\label{eq:underlying}
@@ -157,7 +157,7 @@
 % 	\end{equation}
 % 	where $\mathcal{MD}(\cdot)$ is a multivariate distribution assumed to be either multivariate Gaussian or Student $t$; $b_1, \ldots, b_l$ are fixed effects corresponding to the $l$ explanatory variables $x_1,\ldots, x_l$; $z_1,\ldots, z_h$ denote $h$ \textcolor{blue}{variables whose effects are fitted as random effects}; $u_j(s)$ denotes the \textcolor{blue}{random effect corresponding to $z_j$} at grid $s_i\in\mathcal{S}$, $i=1,\ldots,n$; $\bm{u}_i$ is the vector of all random effects at $s_i$; $\theta_u$ is a set of parameters of the covariance matrix $V_u$, and $\sigma_e$ is the error standard deviation, assumed to be distributed as either Gamma, half-Cauchy, or half-normal. 
 	
-Using the grid point specific notation of the response variable (i.e., $y(s_i)$) introduced in the previous section, the underlying model for analysing a large strip experiment is given by 
+\textcolor{red}{Using the grid point specific notation of the response variable (i.e., $y(s_i)$) introduced in the previous section}, the underlying model for analysing a large strip experiment is given by 
 	\begin{equation}\label{eq:underlying}
 		\begin{split}
 			\textcolor{red}{y(s_i)} & \textcolor{red}{= \sum_{m=1}^{l}b_m x_m(s_i) + \sum_{j=1}^{h}u_j(s_i)z_j(s_i)+e(s_i)}, \\
@@ -167,7 +167,17 @@ Using the grid point specific notation of the response variable (i.e., $y(s_i)$)
 	\end{equation}
 	where $b_1, \ldots, b_l$ are \textcolor{red}{global} effects corresponding to the $l$ explanatory variables $x_1,\ldots, x_l$; $z_1,\ldots, z_h$ denote $h$ \textcolor{red}{variables whose effects are fitted as local effects}; $u_j(s_i)$ denotes the \textcolor{red}{local effect corresponding to $z_j$} at grid $s_i\in\mathcal{S}$; \textcolor{red}{$\bm{u}_i=(u_1(s_i),\ldots,u_h(s_i))^{\top}$ is the vector of all local effects at $s_i$, $i=1,\ldots,n$;} $\theta_u$ is a set of parameters of the covariance matrix $V_u$, and $\sigma_e$ is the error standard deviation, assumed to be distributed as either Gamma, half-Cauchy, or half-normal. 
 	
-	Because both components $\bm{b}$ and $\bm{u}$ under the Bayesian framework are considered random, the term fixed effect for $\bm{b}$  are
+	\textcolor{red}{Because both components $\bm{b}$ and $\bm{u}$ under the Bayesian framework are considered random, the use of the term ``fixed effects" when referring to the vector $\bm{b}$ may seem inappropriate. However, it is common to use this term when linear mixed effects models are fitted under a Bayesian framework; see \textcite{zhao2006general} and \textcite{fong2010bayesian} for details. In this paper we shall use both terms ``fixed effects" and ``global effects" to refer to the model parameters $b_m$, $m=1,\ldots,l$.}
+	
+	\textcolor{red}{A regression model of particular interest is the quadratic response model, used to model the example data set in Section~\ref{sec:analysis}. The term associated with the global effects in \eqref{eq:underlying} would take the form:
+	\begin{equation}
+	 b_{1} + b_{2} x(s_{i}) + b_{3} x^{2}(s_{i}), \, i=1,\ldots, n,
+	\end{equation}
+	where $x(s_{i})$ is the particular level of some controllable treatment applied at location $s_{i}$. Local departures from the global treatment effects $b_{2}$ and $b_{3}$ take the form:
+	\begin{equation}
+	    u_{1}(s_{i}) + u_{2}(s_{i}) x(s_{i}) + u_{3}(s_{i}) x^{2}(s_{i}), \, i=1,\ldots, n,
+	\end{equation}
+	where $u_{1}(s_{i})$, $u_{2}(s_{i})$, and $u_{3}(s_{i})$ are spatially correlated local effects corresponding to the location $s_{i}$. See \textcite{Piepho2011Statistical} for detailed description of the quadratic response model.}
 	
 	\subsection{Model with spatially correlated random parameters}\label{ss:spatcorrrp}
 	
@@ -188,13 +198,13 @@ Using the grid point specific notation of the response variable (i.e., $y(s_i)$)
 	\begin{equation}\label{eq:varu}
 		\Sigma_u = V_s \otimes V_u,
 	\end{equation}
-	where $V_s$ may be considered eithera $\AR\times \AR$ spatial variance-covariance  matrix or a weighted distance matrix.
+	where $V_s$ may be considered either a $\AR\times \AR$ spatial variance-covariance  matrix or a weighted distance matrix.
 	The model \eqref{eq:uncorU} implies correlation within grid points, but not between grid points. This is a simple model to fit, but may be unrealistic for modelling treatment effects of a large strip experiment. The model \eqref{eq:varu} imposes spatial correlation both within and between grid points, and thus, allows us to estimate the spatially-varying treatment effects across the whole field. Despite that only a single treatment is directly observed at each grid point, the estimation of localised treatment effects $\bm{u}_i$ is possible due to the fact that the spatial model \eqref{eq:varu} allows the use of information from neighbouring plots with other treatments \parencite{Piepho2011Statistical}. In what follows, we incorporate the spatial structure specified in \eqref{eq:varu} into our Bayesian modelling framework \eqref{eq:underlying}. 
 	%Furthermore, it should be  pointed out that the above nugget variance $\sigma^2$ could vary in the field. Therefore, and thus for the term $\sigma^2I$ of a hierarchical model, one may assign a distribution to it, such as $\sigma_i\sim \N(\mu_\sigma,sd_\sigma)$, or in an alternative way that it is replaced by a diagonal matrix with $\sigma^2(s_i)$ along the diagonal. Then one may assume that $\bm{\sigma}\sim \N(0,\sigma_sI)$. In most scenarios, the latter option only increases the complexity and is not necessary in our study. 
 	
 	
 	\section{Bayesian process}\label{sec:bayes}
-	\textcolor{blue}{For a given $f:\Theta \rightarrow \mathbb{R}$, the main focus in the Bayesian approach is to estimate $f(\theta)$, typically by its conditional expectation, which is given by }
+	\textcolor{red}{Suppose $\theta \in \Theta$ is the set of all parameters under consideration in \eqref{eq:underlying}.} \textcolor{blue}{For a given $f:\Theta \rightarrow \mathbb{R}$, the main focus in the Bayesian approach is to estimate $f(\theta)$, typically by its conditional expectation, which is given by }
 	\begin{equation}\label{eq:bayesform}
 		\E[f(\theta)\mid \bm{Y}] = \int_{\Theta} f(\theta)p(\theta\mid \bm{Y})d\theta.
 	\end{equation}
@@ -219,15 +229,15 @@ Using the grid point specific notation of the response variable (i.e., $y(s_i)$)
 	where $\text{LKJcorr}(\epsilon)$ is a positive definite correlation matrix sampled from the LKJ distribution that depends on the value of a positive parameter $\epsilon$. The parameter $\epsilon$ controls the correlations in a way that, as the value of $\epsilon$ increases, the correlations amongst parameters decrease.} An useful feature of our prior selection process is that the selected priors would adaptively regularise the individual coefficients of random effects and the associated correlation coefficients; see \textcite{gelman2017Prior, gabry2019Visualization} for more details. 
 	
 	
-	\subsection{Posterior distribution}
+	\subsection{Likelihood and posterior distribution}
 	
-	In precision agriculture, the focus is on, firstly, determining the optimal treatment, such as the most productive nitrogen rate, for every part of the field, and then applying the spatially-varying optimal treatments to the entire field as part of a site-specific management strategy. To this end, an important quantity is 
+	In precision agriculture, the focus is on, firstly, determining the optimal treatment (e.g., the most productive nitrogen rate) for every part of the field, and then applying the spatially-varying optimal treatments to the entire field as part of a site-specific management strategy. To this end, an important quantity is 
 	\begin{equation}
 		p(\bm{X}\mid \bm{Y}) = \int p(\bm{X}\mid \bm{Y},\theta)p(\bm{Y},\theta)d\theta,
 	\end{equation}
 	the conditional probability of $\bm{X}$ given the response, computed by integrating out the set of unknown parameters $\theta$. 
 	
-	In order to estimate $\theta$ conditional on $\bm{Y}$, we use the Bayes theorem to obtain the joint posterior density of the parameters in terms of the likelihood $p(\bm{Y}\mid\theta)$ and the prior $\pi(\theta)$ as follows:
+		In order to estimate $\theta$ conditional on $\bm{Y}$, we use the Bayes theorem to obtain the joint posterior density of the parameters in terms of the likelihood $p(\bm{Y}\mid\theta)$ and the prior $\pi(\theta)$ as follows:
 	\begin{equation}\label{eq:Bayes}
 		p(\theta\mid \bm{Y}) = \frac{p(\bm{Y}\mid\theta)\pi(\theta)}{p(\bm{Y})},
 	\end{equation}
@@ -235,18 +245,22 @@ Using the grid point specific notation of the response variable (i.e., $y(s_i)$)
 	\begin{equation}\label{eq:posterior}
 		p(\theta\mid \bm{Y}) \propto p(\bm{Y}\mid\theta)\pi(\theta).
 	\end{equation}
-The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inference'' of the parameter $\theta$. The posterior distribution $p(\theta\mid \bm{Y})$ provides all information about $\theta$ conditional on the observed data \parencite{Che2010Bayesian}. We denote $L(\theta)=\ln p(\theta\mid\bm{Y})$, the natural logarithm of the posterior in \eqref{eq:posterior}, and obtain for multivariate Gaussian distribution 
+The distribution $p(\theta\mid \bm{Y})$ is the key ingredient for ``Bayesian inference'' of the parameter $\theta$. The posterior distribution $p(\theta\mid \bm{Y})$ provides all information about $\theta$ conditional on the observed data \parencite{Che2010Bayesian}. 
+	
+    \textcolor{red}{Below we specify the Gaussian and Student-$t$ log likelihoods for our problem. We obtain for multivariate Gaussian distribution 
 	\begin{equation}\label{eq:logGpost}
-		L(\theta) \propto -\frac{1}{2} (\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u})^\top \Sigma_e^{-1}(\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u}) -\frac{1}{2}\ln\det\Sigma_e + \ln \pi(\theta),
+		\log p(\bm{Y}\mid\theta) \propto -\frac{1}{2} (\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u})^\top \Sigma_e^{-1}(\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u}) -\frac{1}{2}\ln\det\Sigma_e,
 	\end{equation}
-	or for multivariate Student-$t$ distribution
+and for multivariate Student-$t$ distribution
 	\begin{equation}\label{eq:logTpost}
 		\begin{split}
-			L(\theta) \propto &-\frac{\nu+n}{2}\ln \left( 
-			1+\frac{1}{\nu}(\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u})^\top\Sigma_e^{-1}(\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u})  \right) -\frac{n}{2}\ln\nu \\ &+ \ln \Gamma(\frac{\nu+n}{2}) - \ln\Gamma(\frac{\nu}{2})-\frac{1}{2}\ln\det \Sigma_e + \ln \pi(\theta),
+			\log p(\bm{Y}\mid\theta) \propto &-\frac{\nu+n}{2}\ln \left( 
+			1+\frac{1}{\nu}(\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u})^\top\Sigma_e^{-1}(\bm{Y}-\bm{X}\bm{b}-\bm{Z}\bm{u})  \right) -\frac{n}{2}\ln\nu \\ &+ \ln \Gamma(\frac{\nu+n}{2}) - \ln\Gamma(\frac{\nu}{2})-\frac{1}{2}\ln\det \Sigma_e,
 		\end{split}
 	\end{equation}
-	where $\nu\geq 1$ is the degrees of freedom. 
+	where $\nu\geq 1$ is the degrees of freedom. }
+	
+	\textcolor{red}{Then the posterior distribution can be calculated by combining the likelihood and prior distribution using equation \eqref{eq:posterior}. See \textcite{Besag1999Bayesian,Tsionas2002Bayesian}. }
 	
 	Assuming $\bm{u}\sim \N(0,\Sigma_u)$, for faster gradient evaluation and sampling we impose Cholesky decomposition, such that 
 	\begin{equation}\label{eq:sigmau}
