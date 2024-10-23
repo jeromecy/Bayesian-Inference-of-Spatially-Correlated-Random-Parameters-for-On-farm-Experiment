@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains the code and data for the paper titled "Bayesian inference of spatially correlated random parameters for on-farm experiment" published in Field Crops Research. The paper can be accessed here.
+This repository contains the code and data for the paper titled "Bayesian inference of spatially correlated random parameters for on-farm experiment" published in Field Crops Research. The paper can be accessed at https://doi.org/10.1016/j.fcr.2022.108477.
 
 ## Abstract
 
