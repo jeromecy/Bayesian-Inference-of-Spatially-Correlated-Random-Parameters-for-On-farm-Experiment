@@ -30,18 +30,6 @@ This research provides practical recommendations for designing and analyzing lar
 - **Data**: Datasets used in the study.
 - **Manuscript**: The full manuscript of the published paper.
 
-## How to Use
-
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/your-repo-name.git
-    ```
-2. Navigate to the repository directory:
-    ```bash
-    cd your-repo-name
-    ```
-3. Follow the instructions in the `code` directory to run the analyses.
-
 ## Citation
 
 If you use this repository in your research, please cite the paper as follows:
